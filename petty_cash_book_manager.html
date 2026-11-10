@@ -1,0 +1,2918 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Petty Cash Book Manager - Analytical Imprest Ledger</title>
+  <style>
+    /* ==========================================================================
+       RESET & BASE DESIGN SYSTEM (100% Offline, Zero External CDNs)
+       ========================================================================== */
+    :root {
+      --font-sans: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, Helvetica, Arial, sans-serif;
+      --font-mono: 'Consolas', 'Courier New', monospace;
+      
+      --color-brand-50: #f0fdf4;
+      --color-brand-100: #dcfce7;
+      --color-brand-200: #bbf7d0;
+      --color-brand-500: #22c55e;
+      --color-brand-600: #16a34a;
+      --color-brand-700: #15803d;
+      --color-brand-800: #166534;
+
+      --color-slate-50: #f8fafc;
+      --color-slate-100: #f1f5f9;
+      --color-slate-200: #e2e8f0;
+      --color-slate-300: #cbd5e1;
+      --color-slate-400: #94a3b8;
+      --color-slate-500: #64748b;
+      --color-slate-600: #475569;
+      --color-slate-700: #334155;
+      --color-slate-800: #1e293b;
+      --color-slate-900: #0f172a;
+
+      --color-rose-50: #fff1f2;
+      --color-rose-100: #ffe4e6;
+      --color-rose-500: #f43f5e;
+      --color-rose-600: #e11d48;
+      --color-rose-700: #be123c;
+      --color-rose-800: #9f1239;
+
+      --color-emerald-50: #ecfdf5;
+      --color-emerald-100: #d1fae5;
+      --color-emerald-600: #059669;
+      --color-emerald-700: #047857;
+      --color-emerald-800: #065f46;
+
+      --color-amber-50: #fffbeb;
+      --color-amber-100: #fef3c7;
+      --color-amber-500: #f59e0b;
+      --color-amber-600: #d97706;
+      --color-amber-700: #b45309;
+
+      --color-blue-50: #eff6ff;
+      --color-blue-100: #dbeafe;
+      --color-blue-600: #2563eb;
+      --color-blue-700: #1d4ed8;
+
+      --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+      --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+      --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+      --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+    }
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: var(--font-sans);
+      background-color: var(--color-slate-50);
+      color: var(--color-slate-800);
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: var(--color-slate-100);
+    }
+    ::-webkit-scrollbar-thumb {
+      background: var(--color-slate-300);
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: var(--color-slate-400);
+    }
+
+    /* Container */
+    .app-header {
+      background: #ffffff;
+      border-bottom: 1px solid var(--color-slate-200);
+      position: sticky;
+      top: 0;
+      z-index: 40;
+    }
+    .header-inner {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 0.75rem 1.25rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+    .logo-area {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    .logo-icon {
+      width: 2.5rem;
+      height: 2.5rem;
+      border-radius: 0.75rem;
+      background: linear-gradient(135deg, var(--color-brand-600), var(--color-brand-800));
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 10px rgba(22, 163, 74, 0.25);
+    }
+    .logo-text h1 {
+      font-size: 1.125rem;
+      font-weight: 700;
+      color: var(--color-slate-900);
+      line-height: 1.2;
+    }
+    .logo-text p {
+      font-size: 0.75rem;
+      color: var(--color-slate-500);
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    /* Buttons & Form Controls */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.4rem;
+      font-size: 0.8rem;
+      font-weight: 600;
+      padding: 0.45rem 0.85rem;
+      border-radius: 0.5rem;
+      border: 1px solid transparent;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      white-space: nowrap;
+      text-decoration: none;
+    }
+    .btn-brand {
+      background-color: var(--color-brand-600);
+      color: #ffffff;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+    }
+    .btn-brand:hover {
+      background-color: var(--color-brand-700);
+    }
+    .btn-secondary {
+      background-color: #ffffff;
+      border-color: var(--color-slate-200);
+      color: var(--color-slate-700);
+    }
+    .btn-secondary:hover {
+      background-color: var(--color-slate-100);
+      border-color: var(--color-slate-300);
+    }
+    .btn-outline-brand {
+      background-color: var(--color-brand-50);
+      border-color: var(--color-brand-200);
+      color: var(--color-brand-700);
+    }
+    .btn-outline-brand:hover {
+      background-color: var(--color-brand-100);
+    }
+    .btn-danger {
+      background-color: var(--color-rose-50);
+      border-color: var(--color-rose-100);
+      color: var(--color-rose-700);
+    }
+    .btn-danger:hover {
+      background-color: var(--color-rose-100);
+    }
+    .btn-sm {
+      font-size: 0.75rem;
+      padding: 0.3rem 0.6rem;
+      border-radius: 0.375rem;
+    }
+
+    select, input, textarea {
+      font-family: inherit;
+      font-size: 0.8rem;
+      padding: 0.45rem 0.65rem;
+      border-radius: 0.5rem;
+      border: 1px solid var(--color-slate-200);
+      background-color: #ffffff;
+      color: var(--color-slate-800);
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+    select:focus, input:focus, textarea:focus {
+      outline: none;
+      border-color: var(--color-brand-500);
+      box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.15);
+    }
+
+    /* Main Container */
+    .main-content {
+      max-width: 1400px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 1.25rem;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+    }
+
+    /* 4 Top KPI Dashboard Cards */
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1rem;
+    }
+    .kpi-card {
+      background: #ffffff;
+      border: 1px solid var(--color-slate-200);
+      border-radius: 1rem;
+      padding: 1.15rem;
+      box-shadow: var(--shadow-sm);
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+    .kpi-card:hover {
+      box-shadow: var(--shadow-md);
+      transform: translateY(-1px);
+    }
+    .kpi-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 0.5rem;
+    }
+    .kpi-title {
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--color-slate-400);
+    }
+    .kpi-icon-pill {
+      width: 2.1rem;
+      height: 2.1rem;
+      border-radius: 0.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .kpi-value {
+      font-size: 1.75rem;
+      font-weight: 800;
+      color: var(--color-slate-900);
+      line-height: 1.2;
+      margin-bottom: 0.5rem;
+    }
+    .kpi-footer {
+      font-size: 0.75rem;
+      color: var(--color-slate-500);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-top: 1px solid var(--color-slate-100);
+      padding-top: 0.5rem;
+      margin-top: 0.25rem;
+    }
+
+    /* Progress bar */
+    .progress-bar-bg {
+      width: 100%;
+      height: 6px;
+      background-color: var(--color-slate-100);
+      border-radius: 9999px;
+      overflow: hidden;
+      margin-top: 0.4rem;
+    }
+    .progress-bar-fill {
+      height: 100%;
+      border-radius: 9999px;
+      transition: width 0.4s ease, background-color 0.4s ease;
+    }
+
+    /* Spreadsheet Container */
+    .spreadsheet-panel {
+      background: #ffffff;
+      border: 1px solid var(--color-slate-200);
+      border-radius: 1rem;
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    /* Toolbar */
+    .spreadsheet-toolbar {
+      padding: 0.85rem 1.15rem;
+      border-bottom: 1px solid var(--color-slate-200);
+      background: var(--color-slate-50);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+    }
+    .toolbar-left, .toolbar-right {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+    .search-box {
+      position: relative;
+      min-width: 220px;
+    }
+    .search-box svg {
+      position: absolute;
+      left: 0.65rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--color-slate-400);
+      pointer-events: none;
+    }
+    .search-box input {
+      padding-left: 2.1rem;
+      width: 100%;
+    }
+
+    /* Spreadsheet Table */
+    .table-wrapper {
+      overflow-x: auto;
+      position: relative;
+      max-height: 65vh;
+    }
+    .spreadsheet-table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 0.78rem;
+    }
+    .spreadsheet-table th {
+      background: #f1f5f9;
+      color: var(--color-slate-700);
+      font-weight: 700;
+      text-transform: uppercase;
+      font-size: 0.68rem;
+      letter-spacing: 0.04em;
+      padding: 0.65rem 0.65rem;
+      border-right: 1px solid var(--color-slate-200);
+      border-bottom: 2px solid var(--color-slate-300);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      white-space: nowrap;
+      user-select: none;
+    }
+    .spreadsheet-table td {
+      padding: 0.55rem 0.65rem;
+      border-right: 1px solid var(--color-slate-200);
+      border-bottom: 1px solid var(--color-slate-200);
+      vertical-align: middle;
+      white-space: nowrap;
+    }
+    .spreadsheet-table tr:hover {
+      background-color: #f8fafc;
+    }
+    .spreadsheet-table tfoot td {
+      background: #f1f5f9;
+      font-weight: 700;
+      border-top: 2px solid var(--color-slate-300);
+      border-bottom: none;
+      position: sticky;
+      bottom: 0;
+      z-index: 5;
+    }
+
+    .num-cell {
+      text-align: right;
+      font-family: var(--font-mono);
+      font-size: 0.77rem;
+    }
+    .rec-cell {
+      background-color: rgba(236, 253, 245, 0.45);
+      color: var(--color-emerald-800);
+      font-weight: 600;
+    }
+    .paid-cell {
+      background-color: rgba(255, 241, 242, 0.45);
+      color: var(--color-rose-800);
+      font-weight: 600;
+    }
+    .balance-cell {
+      background-color: rgba(241, 245, 249, 0.6);
+      color: var(--color-slate-900);
+      font-weight: 700;
+    }
+
+    /* Editable cell styling */
+    .editable-cell {
+      cursor: pointer;
+      position: relative;
+    }
+    .editable-cell:hover::after {
+      content: '✎';
+      position: absolute;
+      right: 4px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 10px;
+      color: var(--color-slate-400);
+    }
+
+    /* Badges */
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+      font-size: 0.7rem;
+      font-weight: 600;
+      padding: 0.2rem 0.45rem;
+      border-radius: 0.375rem;
+      white-space: nowrap;
+    }
+    .badge-receipt-ok {
+      background-color: var(--color-brand-100);
+      color: var(--color-brand-800);
+      border: 1px solid var(--color-brand-200);
+      cursor: pointer;
+    }
+    .badge-receipt-ok:hover {
+      background-color: var(--color-brand-200);
+    }
+    .badge-receipt-missing {
+      background-color: var(--color-amber-100);
+      color: var(--color-amber-800);
+      border: 1px dashed var(--color-amber-500);
+      cursor: pointer;
+    }
+    .badge-receipt-missing:hover {
+      background-color: var(--color-amber-200);
+    }
+    .badge-replenish {
+      background-color: var(--color-blue-100);
+      color: var(--color-blue-800);
+    }
+
+    /* Modals */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.55);
+      backdrop-filter: blur(4px);
+      z-index: 50;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s ease;
+    }
+    .modal-overlay.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .modal-dialog {
+      background: #ffffff;
+      border-radius: 1rem;
+      box-shadow: var(--shadow-xl);
+      max-width: 580px;
+      width: 100%;
+      max-height: 90vh;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      transform: scale(0.96);
+      transition: transform 0.2s ease;
+    }
+    .modal-overlay.active .modal-dialog {
+      transform: scale(1);
+    }
+    .modal-dialog-lg {
+      max-width: 820px;
+    }
+    .modal-header {
+      padding: 1rem 1.25rem;
+      border-bottom: 1px solid var(--color-slate-200);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--color-slate-50);
+    }
+    .modal-header h3 {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--color-slate-900);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .modal-body {
+      padding: 1.25rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    .modal-footer {
+      padding: 0.85rem 1.25rem;
+      border-top: 1px solid var(--color-slate-200);
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 0.5rem;
+      background: var(--color-slate-50);
+    }
+    .close-btn {
+      background: none;
+      border: none;
+      color: var(--color-slate-400);
+      cursor: pointer;
+      font-size: 1.2rem;
+      line-height: 1;
+      padding: 0.2rem;
+      border-radius: 0.25rem;
+    }
+    .close-btn:hover {
+      color: var(--color-slate-700);
+    }
+
+    /* Camera Scanner Viewfinder */
+    .scanner-viewfinder {
+      position: relative;
+      width: 100%;
+      background: #000000;
+      border-radius: 0.75rem;
+      overflow: hidden;
+      aspect-ratio: 4 / 3;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .scanner-video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .scanner-overlay {
+      position: absolute;
+      inset: 8%;
+      border: 2px dashed rgba(255, 255, 255, 0.75);
+      border-radius: 0.5rem;
+      pointer-events: none;
+      box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.45);
+    }
+    .scanner-overlay::after {
+      content: 'Align receipt within boundary';
+      position: absolute;
+      bottom: -28px;
+      left: 50%;
+      transform: translateX(-50%);
+      color: #ffffff;
+      font-size: 0.75rem;
+      background: rgba(0,0,0,0.65);
+      padding: 2px 8px;
+      border-radius: 4px;
+      white-space: nowrap;
+    }
+    .scanner-controls {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+      margin-top: 0.75rem;
+    }
+    .snap-btn {
+      width: 3.5rem;
+      height: 3.5rem;
+      border-radius: 50%;
+      background: #ffffff;
+      border: 4px solid var(--color-brand-600);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+      transition: transform 0.1s ease;
+    }
+    .snap-btn:active {
+      transform: scale(0.9);
+    }
+    .snap-btn-inner {
+      width: 2.2rem;
+      height: 2.2rem;
+      border-radius: 50%;
+      background: var(--color-brand-600);
+    }
+
+    /* Receipt Preview */
+    .receipt-preview-box {
+      max-height: 480px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--color-slate-900);
+      border-radius: 0.5rem;
+      overflow: hidden;
+      position: relative;
+    }
+    .receipt-preview-img {
+      max-width: 100%;
+      max-height: 480px;
+      object-fit: contain;
+      transition: transform 0.2s ease, filter 0.2s ease;
+    }
+    .filter-pills {
+      display: flex;
+      gap: 0.5rem;
+      margin-top: 0.5rem;
+    }
+    .filter-pill-btn {
+      font-size: 0.72rem;
+      padding: 0.25rem 0.6rem;
+      border-radius: 0.375rem;
+      border: 1px solid var(--color-slate-200);
+      background: #ffffff;
+      cursor: pointer;
+    }
+    .filter-pill-btn.active {
+      background: var(--color-brand-600);
+      color: #ffffff;
+      border-color: var(--color-brand-600);
+    }
+
+    /* Toast Notification */
+    .toast {
+      position: fixed;
+      bottom: 1.25rem;
+      right: 1.25rem;
+      background: var(--color-slate-900);
+      color: #ffffff;
+      padding: 0.75rem 1.15rem;
+      border-radius: 0.75rem;
+      font-size: 0.8rem;
+      font-weight: 500;
+      box-shadow: var(--shadow-lg);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      z-index: 100;
+      opacity: 0;
+      transform: translateY(10px);
+      transition: opacity 0.25s ease, transform 0.25s ease;
+      pointer-events: none;
+    }
+    .toast.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Quick-add row */
+    .quick-add-bar {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 1.15rem;
+      background: #ffffff;
+      border-top: 1px solid var(--color-slate-200);
+      border-bottom: 1px solid var(--color-slate-200);
+      font-size: 0.75rem;
+    }
+
+    /* Print View */
+    @media print {
+      body {
+        background: #ffffff !important;
+        color: #000000 !important;
+      }
+      .no-print {
+        display: none !important;
+      }
+      .print-only {
+        display: block !important;
+      }
+      .app-header, .spreadsheet-toolbar, .btn, .modal-overlay, .toast, .quick-add-bar {
+        display: none !important;
+      }
+      .spreadsheet-panel {
+        border: none !important;
+        box-shadow: none !important;
+      }
+      .table-wrapper {
+        max-height: none !important;
+        overflow: visible !important;
+      }
+      .spreadsheet-table {
+        font-size: 9pt;
+      }
+      .spreadsheet-table th, .spreadsheet-table td {
+        border: 1px solid #000000 !important;
+        padding: 4px 6px !important;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navigation Bar -->
+  <header class="app-header no-print">
+    <div class="header-inner">
+      <div class="logo-area">
+        <div class="logo-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/><path d="M6 6h10"/><path d="M6 10h10"/></svg>
+        </div>
+        <div class="logo-text">
+          <h1>Petty Cash Book Manager</h1>
+          <p>Real-Time Analytical Imprest Spreadsheet &bull; 100% Offline</p>
+        </div>
+      </div>
+
+      <div class="header-actions">
+        <!-- Currency Selector -->
+        <select id="currencySelect" onchange="changeCurrency(this.value)" title="Change Currency">
+          <option value="$">USD ($)</option>
+          <option value="FCFA">XAF / XOF (FCFA)</option>
+          <option value="€">EUR (€)</option>
+          <option value="£">GBP (£)</option>
+          <option value="₹">INR (₹)</option>
+          <option value="CA$">CAD ($)</option>
+          <option value="₦">NGN (₦)</option>
+          <option value="KSh">KES (KSh)</option>
+          <option value="R">ZAR (R)</option>
+        </select>
+
+        <!-- Imprest Config -->
+        <button onclick="openFloatModal()" class="btn btn-secondary" title="Configure Fixed Float Baseline">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 21v-7"/><path d="M4 10V3"/><path d="M12 21v-9"/><path d="M12 8V3"/><path d="M20 21v-5"/><path d="M20 12V3"/><path d="M1 14h6"/><path d="M9 8h6"/><path d="M17 16h6"/></svg>
+          <span>Set Float</span>
+        </button>
+
+        <!-- Replenish Float (Reimbursement) -->
+        <button onclick="openReplenishModal()" class="btn btn-outline-brand" title="Record reimbursement replenishment when cashier is paid">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M3 21v-5h5"/></svg>
+          <span>Replenish Float</span>
+        </button>
+
+        <!-- New Expense Voucher -->
+        <button onclick="openVoucherModal()" class="btn btn-brand" title="Record a new petty cash expense voucher">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14"/><path d="M5 12h14"/></svg>
+          <span>New Voucher</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="main-content">
+
+    <!-- Overview Dashboard: 4 Top KPI Cards -->
+    <section class="kpi-grid no-print">
+      
+      <!-- Card 1: Fixed Imprest Float -->
+      <div class="kpi-card">
+        <div>
+          <div class="kpi-header">
+            <span class="kpi-title">Fixed Imprest Float</span>
+            <div class="kpi-icon-pill" style="background:#eff6ff; color:#2563eb;">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+            </div>
+          </div>
+          <div class="kpi-value" id="cardFloatVal">$500.00</div>
+        </div>
+        <div class="kpi-footer">
+          <span>Replenishment Baseline</span>
+          <button onclick="openFloatModal()" class="btn btn-sm btn-secondary" style="padding: 2px 6px; font-size:11px;">Edit Float</button>
+        </div>
+      </div>
+
+      <!-- Card 2: Total Disbursements -->
+      <div class="kpi-card">
+        <div>
+          <div class="kpi-header">
+            <span class="kpi-title">Total Disbursements</span>
+            <div class="kpi-icon-pill" style="background:#fff1f2; color:#e11d48;">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 19V5"/><path d="M5 12l7-7 7 7"/></svg>
+            </div>
+          </div>
+          <div class="kpi-value" style="color:var(--color-rose-600);" id="cardSpentVal">$0.00</div>
+        </div>
+        <div>
+          <div class="kpi-footer">
+            <span id="cardSpentPercent">0% of Float Spent</span>
+            <span id="voucherCount">0 vouchers logged</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 3: Cash in Hand -->
+      <div class="kpi-card">
+        <div>
+          <div class="kpi-header">
+            <span class="kpi-title">Cash in Hand</span>
+            <div class="kpi-icon-pill" style="background:#ecfdf5; color:#059669;">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12V7H5a2 2 0 0 1 0-4h14v4"/><path d="M3 5v14a2 2 0 0 0 2 2h16v-5"/><path d="M18 12a2 2 0 0 0 0 4h4v-4Z"/></svg>
+            </div>
+          </div>
+          <div class="kpi-value" style="color:var(--color-emerald-700);" id="cardBalanceVal">$500.00</div>
+        </div>
+        <div>
+          <div class="progress-bar-bg">
+            <div id="balanceProgressBar" class="progress-bar-fill" style="width: 100%; background: var(--color-emerald-600);"></div>
+          </div>
+          <div class="kpi-footer" style="margin-top:0.35rem;">
+            <span>Current Physical Cash</span>
+            <span id="cashStatusHint" style="font-weight:600; color:var(--color-emerald-700);">Adequate Float</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 4: Reimbursement Due -->
+      <div class="kpi-card">
+        <div>
+          <div class="kpi-header">
+            <span class="kpi-title">Reimbursement Due</span>
+            <div class="kpi-icon-pill" style="background:#fffbeb; color:#d97706;">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8"/><path d="M12 18V6"/></svg>
+            </div>
+          </div>
+          <div class="kpi-value" style="color:var(--color-amber-600);" id="cardClaimVal">$0.00</div>
+        </div>
+        <div class="kpi-footer">
+          <span>Amount to request back</span>
+          <button onclick="printRequisition()" class="btn btn-sm btn-outline-brand" style="padding: 2px 8px; font-size:11px;">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+            <span>Claim Form</span>
+          </button>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- Spreadsheet Section -->
+    <div class="spreadsheet-panel">
+      
+      <!-- Toolbar -->
+      <div class="spreadsheet-toolbar no-print">
+        
+        <div class="toolbar-left">
+          <!-- Search Input -->
+          <div class="search-box">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+            <input type="text" id="searchInput" oninput="renderTable()" placeholder="Search description, voucher #...">
+          </div>
+
+          <!-- Category Filter -->
+          <select id="categoryFilter" onchange="renderTable()">
+            <option value="ALL">All Categories</option>
+            <option value="stationery">Stationery</option>
+            <option value="transport">Transport</option>
+            <option value="refreshment">Refreshment</option>
+            <option value="maintenance">Maintenance</option>
+            <option value="sanitation">Sanitation</option>
+            <option value="energy">Energy (Fuel & Elec)</option>
+            <option value="miscellaneous">Miscellaneous</option>
+          </select>
+
+          <!-- Receipt Status Filter -->
+          <select id="receiptFilter" onchange="renderTable()" title="Filter by receipt attachment status">
+            <option value="ALL">All Receipts</option>
+            <option value="ATTACHED">Has Receipt (Audited)</option>
+            <option value="MISSING">⚠️ Missing Receipts (Need Scan)</option>
+          </select>
+
+          <!-- Date Filter -->
+          <input type="date" id="dateFilter" onchange="renderTable()">
+          
+          <button onclick="resetFilters()" class="btn btn-secondary btn-sm" title="Clear all filters">Clear</button>
+        </div>
+
+        <div class="toolbar-right">
+          <!-- Open Scan Modal Directly -->
+          <button onclick="openScanReceiptQuick()" class="btn btn-outline-brand" title="Scan a physical paper receipt with camera">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/><circle cx="12" cy="13" r="3"/></svg>
+            <span>Scan Receipt</span>
+          </button>
+
+          <!-- Analytics Chart Modal -->
+          <button onclick="openAnalyticsModal()" class="btn btn-secondary" title="View category expense analytics chart">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"/><path d="M22 12A10 10 0 0 0 12 2v10z"/></svg>
+            <span>Analytics</span>
+          </button>
+
+          <!-- Export CSV -->
+          <button onclick="exportCSV()" class="btn btn-secondary" title="Export spreadsheet to CSV / Excel">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            <span>Export CSV</span>
+          </button>
+
+          <!-- Backup / Restore -->
+          <button onclick="openBackupModal()" class="btn btn-secondary" title="Backup or Restore database with receipts">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+            <span>Backup / Sync</span>
+          </button>
+
+          <!-- Print Ledger -->
+          <button onclick="window.print()" class="btn btn-secondary" title="Print full analytical petty cash book">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+            <span>Print Ledger</span>
+          </button>
+        </div>
+
+      </div>
+
+      <!-- Quick Add Row (Excel-like fast data entry) -->
+      <div class="quick-add-bar no-print">
+        <span style="font-weight:700; color:var(--color-slate-500); display:flex; align-items:center; gap:4px;">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14"/><path d="M5 12h14"/></svg>
+          Quick Entry:
+        </span>
+        <input type="date" id="qaDate" style="width:130px; font-size:11px; padding:3px 6px;">
+        <input type="text" id="qaVoucher" placeholder="V-#" style="width:75px; font-size:11px; padding:3px 6px;">
+        <input type="text" id="qaDetails" placeholder="Particulars / Vendor description..." style="flex:1; min-width:180px; font-size:11px; padding:3px 6px;">
+        <select id="qaCategory" style="width:130px; font-size:11px; padding:3px 6px;">
+          <option value="stationery">Stationery</option>
+          <option value="transport">Transport</option>
+          <option value="refreshment">Refreshment</option>
+          <option value="maintenance">Maintenance</option>
+          <option value="sanitation">Sanitation</option>
+          <option value="energy">Energy (Fuel & Elec)</option>
+          <option value="miscellaneous">Miscellaneous</option>
+        </select>
+        <div style="position:relative; width:95px;">
+          <span style="position:absolute; left:6px; top:50%; transform:translateY(-50%); color:var(--color-slate-400); font-weight:600; font-size:11px;" class="curSymbol">$</span>
+          <input type="number" step="0.01" min="0.01" id="qaAmount" placeholder="0.00" style="width:100%; font-size:11px; padding:3px 6px 3px 18px;">
+        </div>
+        <button onclick="saveQuickAdd()" class="btn btn-brand btn-sm" style="padding:4px 10px;">+ Add Row</button>
+      </div>
+
+      <!-- Analytical Petty Cash Book Table -->
+      <div class="table-wrapper">
+        <table class="spreadsheet-table" id="mainSpreadsheetTable">
+          <thead>
+            <tr>
+              <th style="width:85px;">Date</th>
+              <th style="width:75px;">Voucher</th>
+              <th style="min-width:210px;">Particulars (Details / Payee)</th>
+              <th style="width:95px; text-align:right;" class="rec-cell">Rec'd (+)</th>
+              <th style="width:95px; text-align:right;" class="paid-cell">Paid (-)</th>
+              <th style="width:105px; text-align:right;" class="balance-cell" title="Cash in hand after each transaction">Cash Balance</th>
+              <th style="width:115px; text-align:center;">Receipt Proof</th>
+              <!-- Analytical Expense Columns -->
+              <th style="min-width:90px; text-align:right;">Stationery</th>
+              <th style="min-width:90px; text-align:right;">Transport</th>
+              <th style="min-width:95px; text-align:right;">Refreshment</th>
+              <th style="min-width:95px; text-align:right;">Maintenance</th>
+              <th style="min-width:90px; text-align:right;">Sanitation</th>
+              <th style="min-width:95px; text-align:right;" title="Generator Fuel, Electricity & Tokens">Energy</th>
+              <th style="min-width:90px; text-align:right;">Misc</th>
+              <th style="width:75px; text-align:center;" class="no-print">Action</th>
+            </tr>
+          </thead>
+          <tbody id="pettyCashTbody">
+            <!-- Populated reactively via JS -->
+          </tbody>
+          <tfoot id="pettyCashTfoot">
+            <!-- Dynamic footer sums populated via JS -->
+          </tfoot>
+        </table>
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- ==========================================================================
+       MODALS: CAMERA SCANNER, RECEIPT VIEWER, VOUCHER FORM, FLOAT, REPLENISH
+       ========================================================================== -->
+
+  <!-- MODAL: Live Camera Receipt Scanner -->
+  <div id="cameraModal" class="modal-overlay">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h3>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/><circle cx="12" cy="13" r="3"/></svg>
+          <span>Scan Physical Paper Receipt</span>
+        </h3>
+        <button class="close-btn" onclick="closeCameraModal()">&times;</button>
+      </div>
+
+      <div class="modal-body">
+        <p style="font-size:0.75rem; color:var(--color-slate-500);">
+          Point your desktop webcam or document camera at the paper receipt or bill to attach it to the voucher.
+        </p>
+
+        <!-- Live Viewfinder -->
+        <div id="cameraStreamView" class="scanner-viewfinder">
+          <video id="cameraVideo" class="scanner-video" autoplay playsinline></video>
+          <div class="scanner-overlay"></div>
+        </div>
+
+        <!-- Captured Image Preview (Shown after snap) -->
+        <div id="cameraCapturedView" style="display:none;">
+          <div class="receipt-preview-box">
+            <img id="capturedImagePreview" class="receipt-preview-img" alt="Captured Receipt">
+          </div>
+          
+          <!-- Image Enhancement Filters -->
+          <div style="display:flex; align-items:center; justify-content:space-between; margin-top:0.5rem;">
+            <div class="filter-pills">
+              <button onclick="applyScanFilter('normal')" id="fltNormal" class="filter-pill-btn active">Original</button>
+              <button onclick="applyScanFilter('contrast')" id="fltContrast" class="filter-pill-btn">High Contrast (Scan)</button>
+              <button onclick="applyScanFilter('bw')" id="fltBw" class="filter-pill-btn">B&amp;W Grayscale</button>
+            </div>
+            <button onclick="rotateCapturedImage()" class="btn btn-secondary btn-sm" title="Rotate 90 degrees">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.85.83 6.72 2.24L21 8"/><path d="M21 3v5h-5"/></svg>
+              <span>Rotate</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Camera Controls -->
+        <div id="cameraLiveControls" class="scanner-controls">
+          <button onclick="captureSnapshot()" class="snap-btn" title="Snap Photo of Receipt">
+            <div class="snap-btn-inner"></div>
+          </button>
+        </div>
+
+        <!-- Fallback if camera stream is restricted on file:// protocol -->
+        <div id="cameraFallbackNotice" style="display:none; background:var(--color-amber-50); border:1px solid var(--color-amber-200); padding:0.75rem; border-radius:0.5rem; font-size:0.75rem; color:var(--color-amber-800);">
+          <strong>Direct live camera notice:</strong> Browsers restrict live webcam video on direct <code>file://</code> URLs.
+          <div style="margin-top:0.35rem;">
+            You can either:
+            <ul style="padding-left:1.2rem; margin-top:0.25rem;">
+              <li>Use <strong>Run_Petty_Cash_Manager.bat</strong> to open with full live camera scanning support on <code>http://localhost</code>.</li>
+              <li>Or click below to snap / upload receipt photo directly:</li>
+            </ul>
+          </div>
+          <div style="margin-top:0.5rem;">
+            <input type="file" id="fallbackFileInput" accept="image/*,.pdf" capture="environment" onchange="handleFallbackUpload(event)">
+          </div>
+        </div>
+
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" onclick="closeCameraModal()">Cancel</button>
+        <button type="button" id="retakeBtn" style="display:none;" class="btn btn-secondary" onclick="retakePhoto()">Retake Photo</button>
+        <button type="button" id="confirmScanBtn" style="display:none;" class="btn btn-brand" onclick="confirmScanAttachment()">Attach Scanned Receipt</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: Receipt Lightbox / Traceability Viewer -->
+  <div id="receiptViewerModal" class="modal-overlay">
+    <div class="modal-dialog modal-dialog-lg">
+      <div class="modal-header">
+        <div>
+          <h3 id="rvTitle">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+            <span>Receipt Document Viewer</span>
+          </h3>
+          <p id="rvSubtitle" style="font-size:0.72rem; color:var(--color-slate-500); margin-top:2px;">Voucher Traceability Audit</p>
+        </div>
+        <button class="close-btn" onclick="closeReceiptViewer()">&times;</button>
+      </div>
+
+      <div class="modal-body">
+        
+        <!-- Document Display Container -->
+        <div id="rvDocContainer" style="background:#0f172a; border-radius:0.75rem; min-height:360px; max-height:520px; display:flex; align-items:center; justify-content:center; overflow:hidden; position:relative;">
+          <img id="rvImage" src="" alt="Voucher Receipt" style="max-width:100%; max-height:500px; object-fit:contain; transition:transform 0.2s ease;">
+          <iframe id="rvPdfFrame" style="display:none; width:100%; height:500px; border:none; background:#ffffff;"></iframe>
+        </div>
+
+        <!-- Viewer Controls -->
+        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem; background:var(--color-slate-50); padding:0.5rem 0.75rem; border-radius:0.5rem; border:1px solid var(--color-slate-200);">
+          <div style="display:flex; gap:0.35rem;">
+            <button onclick="zoomRvImage(1.2)" class="btn btn-secondary btn-sm" title="Zoom in">Zoom +</button>
+            <button onclick="zoomRvImage(0.8)" class="btn btn-secondary btn-sm" title="Zoom out">Zoom -</button>
+            <button onclick="resetRvImage()" class="btn btn-secondary btn-sm" title="Reset view">Reset</button>
+            <button onclick="rotateRvImage()" class="btn btn-secondary btn-sm" title="Rotate 90 degrees">Rotate</button>
+          </div>
+
+          <div style="display:flex; gap:0.35rem;">
+            <button onclick="downloadCurrentReceipt()" class="btn btn-secondary btn-sm" title="Download original receipt file">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              <span>Download</span>
+            </button>
+            <button onclick="printSingleVoucher()" class="btn btn-secondary btn-sm" title="Print 1-page petty cash payment voucher with receipt">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+              <span>Print Voucher</span>
+            </button>
+            <button onclick="deleteCurrentReceipt()" class="btn btn-danger btn-sm" title="Remove this receipt attachment">
+              <span>Delete Receipt</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Voucher Details Card -->
+        <div id="rvMetaCard" style="display:grid; grid-template-columns:repeat(auto-fit, minmax(130px, 1fr)); gap:0.5rem; font-size:0.75rem; background:var(--color-slate-100); padding:0.75rem; border-radius:0.5rem;">
+          <div><span style="color:var(--color-slate-500); font-size:0.68rem; display:block;">VOUCHER #</span><strong id="rvMetaVoucher">--</strong></div>
+          <div><span style="color:var(--color-slate-500); font-size:0.68rem; display:block;">DATE</span><strong id="rvMetaDate">--</strong></div>
+          <div><span style="color:var(--color-slate-500); font-size:0.68rem; display:block;">AMOUNT</span><strong id="rvMetaAmount">--</strong></div>
+          <div><span style="color:var(--color-slate-500); font-size:0.68rem; display:block;">CATEGORY</span><strong id="rvMetaCategory">--</strong></div>
+          <div style="grid-column: span 2;"><span style="color:var(--color-slate-500); font-size:0.68rem; display:block;">PARTICULARS</span><strong id="rvMetaDetails">--</strong></div>
+        </div>
+
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="closeReceiptViewer()">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: Add / Edit Voucher -->
+  <div id="voucherModal" class="modal-overlay">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h3 id="voucherModalTitle">Record Petty Cash Expense</h3>
+        <button class="close-btn" onclick="closeVoucherModal()">&times;</button>
+      </div>
+
+      <form id="voucherForm" onsubmit="saveVoucher(event)">
+        <div class="modal-body">
+          <input type="hidden" id="voucherId">
+
+          <div style="display:grid; grid-template-columns: 1fr 1fr; gap:0.75rem;">
+            <div>
+              <label style="display:block; font-size:0.72rem; font-weight:600; color:var(--color-slate-600); margin-bottom:4px;">Date *</label>
+              <input type="date" id="voucherDate" required style="width:100%;">
+            </div>
+            <div>
+              <label style="display:block; font-size:0.72rem; font-weight:600; color:var(--color-slate-600); margin-bottom:4px;">Voucher No. *</label>
+              <input type="text" id="voucherNo" placeholder="V-101" required style="width:100%;">
+            </div>
+          </div>
+
+          <div>
+            <label style="display:block; font-size:0.72rem; font-weight:600; color:var(--color-slate-600); margin-bottom:4px;">Particulars / Description / Vendor *</label>
+            <input type="text" id="voucherDetails" placeholder="e.g. Printer paper & gel pens, Taxi fare, Fuel for generator" required style="width:100%;">
+          </div>
+
+          <div style="display:grid; grid-template-columns: 1fr 1fr; gap:0.75rem;">
+            <div>
+              <label style="display:block; font-size:0.72rem; font-weight:600; color:var(--color-slate-600); margin-bottom:4px;">Expense Category *</label>
+              <select id="voucherCategory" required style="width:100%;">
+                <option value="stationery">Stationery</option>
+                <option value="transport">Transport</option>
+                <option value="refreshment">Refreshment</option>
+                <option value="maintenance">Maintenance</option>
+                <option value="sanitation">Sanitation</option>
+                <option value="energy">Energy (Fuel & Elec)</option>
+                <option value="miscellaneous">Miscellaneous</option>
+              </select>
+            </div>
+            <div>
+              <label style="display:block; font-size:0.72rem; font-weight:600; color:var(--color-slate-600); margin-bottom:4px;">Amount Paid *</label>
+              <div style="position:relative;">
+                <span class="curSymbol" style="position:absolute; left:8px; top:50%; transform:translateY(-50%); color:var(--color-slate-400); font-weight:700; font-size:12px;">$</span>
+                <input type="number" step="0.01" min="0.01" id="voucherAmount" placeholder="0.00" required style="width:100%; padding-left:22px;">
+              </div>
+            </div>
+          </div>
+
+          <!-- Receipt Upload & Scanner Options -->
+          <div style="border:1px dashed var(--color-slate-300); border-radius:0.75rem; padding:0.85rem; background:var(--color-slate-50);">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.5rem;">
+              <label style="font-size:0.75rem; font-weight:700; color:var(--color-slate-700);">Attach Receipt (Paper or Digital)</label>
+              <button type="button" onclick="triggerScanForVoucherModal()" class="btn btn-outline-brand btn-sm" style="padding:2px 8px; font-size:11px;">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/><circle cx="12" cy="13" r="3"/></svg>
+                <span>Scan with Camera</span>
+              </button>
+            </div>
+            
+            <input type="file" id="voucherReceiptInput" accept="image/*,.pdf" capture="environment" onchange="handleModalReceiptSelect(event)" style="width:100%; font-size:0.75rem;">
+            
+            <!-- Receipt Attachment Status Preview in Modal -->
+            <div id="modalReceiptStatus" style="display:none; margin-top:0.5rem; font-size:0.75rem; padding:0.4rem 0.6rem; border-radius:0.375rem; background:var(--color-brand-100); color:var(--color-brand-800); display:flex; align-items:center; justify-content:space-between;">
+              <span id="modalReceiptStatusText">📎 Receipt attached</span>
+              <button type="button" onclick="clearModalReceipt()" class="btn btn-sm btn-danger" style="padding:1px 5px; font-size:10px;">Remove</button>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="closeVoucherModal()">Cancel</button>
+          <button type="submit" class="btn btn-brand">Save Voucher</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL: Set Fixed Imprest Float -->
+  <div id="floatModal" class="modal-overlay">
+    <div class="modal-dialog" style="max-width:440px;">
+      <div class="modal-header">
+        <h3>Configure Fixed Imprest Float</h3>
+        <button class="close-btn" onclick="closeFloatModal()">&times;</button>
+      </div>
+      <form onsubmit="saveFloat(event)">
+        <div class="modal-body">
+          <label style="font-size:0.75rem; font-weight:600; color:var(--color-slate-600); display:block; margin-bottom:4px;">
+            Fixed Baseline Imprest Float Amount *
+          </label>
+          <div style="position:relative;">
+            <span class="curSymbol" style="position:absolute; left:8px; top:50%; transform:translateY(-50%); color:var(--color-slate-400); font-weight:700; font-size:12px;">$</span>
+            <input type="number" id="floatAmountInput" step="0.01" min="1" required style="width:100%; padding-left:22px;">
+          </div>
+          <p style="font-size:0.72rem; color:var(--color-slate-400); margin-top:0.35rem;">
+            This is the standard replenishment baseline allocated to the petty cashier at the start of every cycle.
+          </p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="closeFloatModal()">Cancel</button>
+          <button type="submit" class="btn btn-brand">Update Float Baseline</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL: Record Imprest Replenishment -->
+  <div id="replenishModal" class="modal-overlay">
+    <div class="modal-dialog" style="max-width:460px;">
+      <div class="modal-header">
+        <h3>Record Imprest Replenishment</h3>
+        <button class="close-btn" onclick="closeReplenishModal()">&times;</button>
+      </div>
+      <form onsubmit="saveReplenish(event)">
+        <div class="modal-body">
+          <p style="font-size:0.75rem; color:var(--color-slate-600);">
+            When the petty cash reimbursement claim is approved and paid by the main cashier or bank, record the replenishment here to restore your cash in hand to the fixed float.
+          </p>
+
+          <div style="background:var(--color-brand-50); border:1px solid var(--color-brand-200); border-radius:0.5rem; padding:0.75rem;">
+            <div style="display:flex; justify-content:space-between; font-size:0.75rem; margin-bottom:4px;">
+              <span>Current Cash in Hand:</span>
+              <strong id="repCurrentCash">$0.00</strong>
+            </div>
+            <div style="display:flex; justify-content:space-between; font-size:0.75rem; margin-bottom:4px;">
+              <span>Approved Fixed Float:</span>
+              <strong id="repFloatVal">$0.00</strong>
+            </div>
+            <div style="display:flex; justify-content:space-between; font-size:0.85rem; font-weight:700; color:var(--color-brand-800); border-top:1px dashed var(--color-brand-200); padding-top:4px; margin-top:4px;">
+              <span>Calculated Replenishment Due:</span>
+              <span id="repDueVal">$0.00</span>
+            </div>
+          </div>
+
+          <div style="display:grid; grid-template-columns: 1fr 1fr; gap:0.5rem; margin-top:0.5rem;">
+            <div>
+              <label style="font-size:0.72rem; font-weight:600; color:var(--color-slate-600); display:block; margin-bottom:2px;">Replenishment Date</label>
+              <input type="date" id="repDate" required style="width:100%;">
+            </div>
+            <div>
+              <label style="font-size:0.72rem; font-weight:600; color:var(--color-slate-600); display:block; margin-bottom:2px;">Reference / Cheque #</label>
+              <input type="text" id="repRef" placeholder="CHQ-8902 or CASH" required style="width:100%;">
+            </div>
+          </div>
+
+          <div>
+            <label style="font-size:0.72rem; font-weight:600; color:var(--color-slate-600); display:block; margin-bottom:2px;">Amount Received (+)</label>
+            <div style="position:relative;">
+              <span class="curSymbol" style="position:absolute; left:8px; top:50%; transform:translateY(-50%); color:var(--color-slate-400); font-weight:700; font-size:12px;">$</span>
+              <input type="number" step="0.01" min="0.01" id="repAmount" required style="width:100%; padding-left:22px;">
+            </div>
+          </div>
+
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="closeReplenishModal()">Cancel</button>
+          <button type="submit" class="btn btn-brand">Confirm Replenishment</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL: Analytics Visual Chart (100% Offline Canvas) -->
+  <div id="analyticsModal" class="modal-overlay">
+    <div class="modal-dialog modal-dialog-lg">
+      <div class="modal-header">
+        <h3>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"/><path d="M22 12A10 10 0 0 0 12 2v10z"/></svg>
+          <span>Expense Category Analytics</span>
+        </h3>
+        <button class="close-btn" onclick="closeAnalyticsModal()">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div style="display:flex; flex-direction:column; md:flex-row; gap:1.5rem; align-items:center;">
+          <!-- High DPI Canvas Doughnut Chart -->
+          <div style="width:300px; height:300px; position:relative; display:flex; align-items:center; justify-content:center;">
+            <canvas id="chartCanvas" width="600" height="600" style="width:300px; height:300px;"></canvas>
+          </div>
+
+          <!-- Breakdown Legend & Subtotals -->
+          <div style="flex:1; width:100%;">
+            <h4 style="font-size:0.8rem; font-weight:700; color:var(--color-slate-700); margin-bottom:0.75rem; text-transform:uppercase; letter-spacing:0.05em;">
+              Analytical Column Subtotals
+            </h4>
+            <div id="chartLegendContainer" style="display:flex; flex-direction:column; gap:0.4rem; font-size:0.75rem;">
+              <!-- Populated via JS -->
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="closeAnalyticsModal()">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: Backup / Restore / Cloud-free Sync -->
+  <div id="backupModal" class="modal-overlay">
+    <div class="modal-dialog" style="max-width:480px;">
+      <div class="modal-header">
+        <h3>Local Database Backup &amp; Sync</h3>
+        <button class="close-btn" onclick="closeBackupModal()">&times;</button>
+      </div>
+      <div class="modal-body" style="gap:1.25rem;">
+        
+        <!-- Export Backup -->
+        <div style="border:1px solid var(--color-slate-200); border-radius:0.75rem; padding:1rem; background:var(--color-slate-50);">
+          <h4 style="font-size:0.85rem; font-weight:700; color:var(--color-slate-900); margin-bottom:0.25rem;">
+            Export Full Ledger &amp; Scanned Receipts
+          </h4>
+          <p style="font-size:0.72rem; color:var(--color-slate-500); margin-bottom:0.75rem;">
+            Download a complete offline backup file (JSON) containing all vouchers, imprest balances, and all high-resolution receipt images.
+          </p>
+          <button onclick="downloadBackupJson()" class="btn btn-brand btn-sm">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            <span>Download Complete Backup (.json)</span>
+          </button>
+        </div>
+
+        <!-- Import Backup -->
+        <div style="border:1px solid var(--color-slate-200); border-radius:0.75rem; padding:1rem; background:var(--color-slate-50);">
+          <h4 style="font-size:0.85rem; font-weight:700; color:var(--color-slate-900); margin-bottom:0.25rem;">
+            Restore Backup on this Desktop
+          </h4>
+          <p style="font-size:0.72rem; color:var(--color-slate-500); margin-bottom:0.75rem;">
+            Restore your database from a previously downloaded backup file.
+          </p>
+          <input type="file" id="restoreFileInput" accept=".json" onchange="restoreBackupJson(event)" style="font-size:0.75rem;">
+        </div>
+
+        <!-- Sample Data Reset -->
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+          <span style="font-size:0.72rem; color:var(--color-slate-400);">Reset to initial sample vouchers?</span>
+          <button onclick="resetToSampleData()" class="btn btn-sm btn-danger">Reset Sample Data</button>
+        </div>
+
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="closeBackupModal()">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==========================================================================
+       PRINTABLE SECTIONS (Visible Only on Browser Print)
+       ========================================================================== -->
+
+  <!-- Printable Section 1: Petty Cash Requisition Form -->
+  <div id="printRequisitionArea" class="print-only" style="display:none; padding:1.5rem; max-width:800px; margin:0 auto; background:#ffffff;">
+    <div style="display:flex; justify-content:space-between; align-items:flex-start; border-bottom:2px solid #000000; padding-bottom:0.75rem; margin-bottom:1.25rem;">
+      <div>
+        <h2 style="font-size:1.5rem; font-weight:800; text-transform:uppercase; letter-spacing:0.04em;">PETTY CASH REQUISITION FORM</h2>
+        <p style="font-size:0.8rem; color:#475569;">Imprest Replenishment Claim Voucher</p>
+      </div>
+      <div style="text-align:right; font-size:0.8rem;">
+        <p><strong>Date:</strong> <span id="reqDate">--</span></p>
+        <p><strong>Period:</strong> <span id="reqPeriod">Current Accounting Cycle</span></p>
+      </div>
+    </div>
+
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin-bottom:1.25rem; font-size:0.8rem;">
+      <div style="border:1px solid #cbd5e1; padding:0.75rem; border-radius:0.375rem;">
+        <p style="font-size:0.7rem; font-weight:700; text-transform:uppercase; color:#64748b; margin-bottom:4px;">Imprest Allocation Summary</p>
+        <p style="display:flex; justify-content:space-between; margin-bottom:3px;"><span>Approved Fixed Float:</span> <strong id="reqFloatVal">$0.00</strong></p>
+        <p style="display:flex; justify-content:space-between; margin-bottom:3px;"><span>Current Cash on Hand:</span> <strong id="reqCashVal">$0.00</strong></p>
+        <p style="display:flex; justify-content:space-between; border-top:1px solid #cbd5e1; padding-top:4px; margin-top:4px; font-weight:800; font-size:0.9rem;">
+          <span>Total Reimbursement Due:</span> <span id="reqClaimVal" style="color:#047857;">$0.00</span>
+        </p>
+      </div>
+
+      <div style="border:1px solid #cbd5e1; padding:0.75rem; border-radius:0.375rem;">
+        <p style="font-size:0.7rem; font-weight:700; text-transform:uppercase; color:#64748b; margin-bottom:4px;">Custodian &amp; Department</p>
+        <p style="margin-bottom:3px;"><strong>Petty Cashier:</strong> General Office Admin / Finance</p>
+        <p style="margin-bottom:3px;"><strong>Department:</strong> Administration &amp; Operations</p>
+        <p style="margin-bottom:3px;"><strong>Verification:</strong> All physical/digital receipts audited</p>
+      </div>
+    </div>
+
+    <h3 style="font-size:0.85rem; font-weight:700; text-transform:uppercase; border-bottom:1px solid #cbd5e1; padding-bottom:4px; margin-bottom:0.5rem;">
+      Analytical Disbursement Breakdown
+    </h3>
+    <table style="width:100%; border-collapse:collapse; font-size:0.8rem; margin-bottom:2rem; border:1px solid #cbd5e1;">
+      <thead>
+        <tr style="background:#f1f5f9; border-bottom:1px solid #cbd5e1;">
+          <th style="padding:6px 10px; text-align:left; border-right:1px solid #cbd5e1;">Expense Category</th>
+          <th style="padding:6px 10px; text-align:right;">Subtotal Disbursed</th>
+        </tr>
+      </thead>
+      <tbody id="reqBreakdownTbody">
+        <!-- Populated via JS -->
+      </tbody>
+    </table>
+
+    <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:1.5rem; margin-top:2.5rem; text-align:center; font-size:0.78rem;">
+      <div>
+        <div style="border-bottom:1px solid #000000; height:36px; margin-bottom:4px;"></div>
+        <p style="font-weight:700;">Prepared By (Cashier)</p>
+      </div>
+      <div>
+        <div style="border-bottom:1px solid #000000; height:36px; margin-bottom:4px;"></div>
+        <p style="font-weight:700;">Checked By (Internal Auditor)</p>
+      </div>
+      <div>
+        <div style="border-bottom:1px solid #000000; height:36px; margin-bottom:4px;"></div>
+        <p style="font-weight:700;">Approved By (Finance Controller)</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Printable Section 2: Individual Voucher with Attached Receipt -->
+  <div id="printSingleVoucherArea" class="print-only" style="display:none; padding:1.5rem; max-width:800px; margin:0 auto; background:#ffffff;">
+    <div style="border-bottom:2px solid #000000; padding-bottom:0.75rem; margin-bottom:1rem; display:flex; justify-content:space-between; align-items:flex-start;">
+      <div>
+        <h2 style="font-size:1.4rem; font-weight:800; text-transform:uppercase;">PETTY CASH DISBURSEMENT VOUCHER</h2>
+        <p style="font-size:0.8rem; color:#475569;">Official Payment &amp; Accountability Record</p>
+      </div>
+      <div style="text-align:right; font-size:0.85rem;">
+        <p><strong>VOUCHER NO:</strong> <span id="pvVoucherNo" style="font-size:1.1rem; color:#0f172a;">--</span></p>
+        <p><strong>DATE:</strong> <span id="pvDate">--</span></p>
+      </div>
+    </div>
+
+    <table style="width:100%; border-collapse:collapse; font-size:0.85rem; margin-bottom:1rem; border:1px solid #cbd5e1;">
+      <tr style="border-bottom:1px solid #cbd5e1;">
+        <td style="padding:6px 10px; background:#f8fafc; width:160px; font-weight:700;">Particulars / Description</td>
+        <td id="pvDetails" style="padding:6px 10px;">--</td>
+      </tr>
+      <tr style="border-bottom:1px solid #cbd5e1;">
+        <td style="padding:6px 10px; background:#f8fafc; font-weight:700;">Category</td>
+        <td id="pvCategory" style="padding:6px 10px;">--</td>
+      </tr>
+      <tr>
+        <td style="padding:6px 10px; background:#f8fafc; font-weight:700;">Amount Paid</td>
+        <td id="pvAmount" style="padding:6px 10px; font-weight:800; font-size:1.1rem; color:#be123c;">--</td>
+      </tr>
+    </table>
+
+    <!-- Printed Attached Receipt Image -->
+    <div style="margin-bottom:1.5rem; border:1px solid #cbd5e1; padding:0.5rem; text-align:center;">
+      <p style="font-size:0.75rem; font-weight:700; text-transform:uppercase; color:#64748b; margin-bottom:4px; text-align:left;">Attached Receipt Proof (Scanned / Uploaded)</p>
+      <img id="pvReceiptImg" style="max-height:420px; max-width:100%; object-fit:contain; border:1px solid #e2e8f0;" alt="Receipt">
+    </div>
+
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:2rem; margin-top:2rem; text-align:center; font-size:0.8rem;">
+      <div>
+        <div style="border-bottom:1px solid #000000; height:36px; margin-bottom:4px;"></div>
+        <p style="font-weight:700;">Received By (Payee)</p>
+      </div>
+      <div>
+        <div style="border-bottom:1px solid #000000; height:36px; margin-bottom:4px;"></div>
+        <p style="font-weight:700;">Authorized By (Petty Cashier)</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification -->
+  <div id="toast" class="toast">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+    <span id="toastMsg">Action completed successfully</span>
+  </div>
+
+  <!-- ==========================================================================
+       JAVASCRIPT APPLICATION CORE (100% Offline, Zero CDN dependencies)
+       ========================================================================== -->
+  <script>
+    /* --------------------------------------------------------------------------
+       STATE & SEED DATA
+       -------------------------------------------------------------------------- */
+    let currencySymbol = '$';
+    let imprestFloat = 500.00;
+    let transactions = [];
+    let receipts = {}; // voucherId -> { dataUrl, fileType, fileName, fileSize, isCamera, timestamp }
+
+    const CATEGORIES = [
+      { key: 'stationery', name: 'Stationery', color: '#3b82f6' },
+      { key: 'transport', name: 'Transport', color: '#06b6d4' },
+      { key: 'refreshment', name: 'Refreshment', color: '#ec4899' },
+      { key: 'maintenance', name: 'Maintenance', color: '#8b5cf6' },
+      { key: 'sanitation', name: 'Sanitation', color: '#10b981' },
+      { key: 'energy', name: 'Energy (Fuel/Elec)', color: '#f59e0b' },
+      { key: 'miscellaneous', name: 'Miscellaneous', color: '#64748b' }
+    ];
+
+    // Camera scanner state
+    let cameraMediaStream = null;
+    let capturedCanvasData = null;
+    let currentScanTargetVoucherId = null;
+    let currentRotation = 0;
+    let currentFilter = 'normal';
+
+    // Receipt viewer state
+    let currentViewingVoucherId = null;
+    let rvZoom = 1;
+    let rvRotation = 0;
+
+    /* --------------------------------------------------------------------------
+       INDEXED-DB OFFLINE STORAGE ENGINE
+       -------------------------------------------------------------------------- */
+    const DB_NAME = 'PettyCashManagerDB';
+    const DB_VERSION = 1;
+    let dbInstance = null;
+
+    function openDatabase() {
+      return new Promise((resolve, reject) => {
+        const req = indexedDB.open(DB_NAME, DB_VERSION);
+        req.onupgradeneeded = function(e) {
+          const db = e.target.result;
+          if (!db.objectStoreNames.contains('transactions')) {
+            db.createObjectStore('transactions', { keyPath: 'id' });
+          }
+          if (!db.objectStoreNames.contains('receipts')) {
+            db.createObjectStore('receipts', { keyPath: 'voucherId' });
+          }
+          if (!db.objectStoreNames.contains('settings')) {
+            db.createObjectStore('settings', { keyPath: 'key' });
+          }
+        };
+        req.onsuccess = function(e) {
+          dbInstance = e.target.result;
+          resolve(dbInstance);
+        };
+        req.onerror = function(e) {
+          console.warn('IndexedDB unavailable, falling back to memory/localStorage', e);
+          resolve(null);
+        };
+      });
+    }
+
+    async function loadAllFromStorage() {
+      if (!dbInstance) {
+        // Fallback localStorage
+        try {
+          const storedTx = localStorage.getItem('pcm_transactions');
+          if (storedTx) transactions = JSON.parse(storedTx);
+          const storedRec = localStorage.getItem('pcm_receipts');
+          if (storedRec) receipts = JSON.parse(storedRec);
+          const storedFloat = localStorage.getItem('pcm_float');
+          if (storedFloat) imprestFloat = parseFloat(storedFloat);
+          const storedCur = localStorage.getItem('pcm_currency');
+          if (storedCur) currencySymbol = storedCur;
+        } catch (e) {
+          console.error(e);
+        }
+        return;
+      }
+
+      return new Promise((resolve) => {
+        const tx = dbInstance.transaction(['transactions', 'receipts', 'settings'], 'readonly');
+        const txStore = tx.objectStore('transactions');
+        const recStore = tx.objectStore('receipts');
+        const setStore = tx.objectStore('settings');
+
+        const reqTx = txStore.getAll();
+        const reqRec = recStore.getAll();
+        const reqSet = setStore.getAll();
+
+        tx.oncomplete = function() {
+          if (reqTx.result && reqTx.result.length > 0) {
+            transactions = reqTx.result;
+          }
+          if (reqRec.result) {
+            receipts = {};
+            reqRec.result.forEach(r => {
+              receipts[r.voucherId] = r;
+            });
+          }
+          if (reqSet.result) {
+            reqSet.result.forEach(s => {
+              if (s.key === 'imprestFloat') imprestFloat = s.value;
+              if (s.key === 'currencySymbol') currencySymbol = s.value;
+            });
+          }
+          resolve();
+        };
+      });
+    }
+
+    async function persistTransactions() {
+      try {
+        localStorage.setItem('pcm_transactions', JSON.stringify(transactions));
+      } catch (e) {}
+
+      if (!dbInstance) return;
+      const tx = dbInstance.transaction(['transactions'], 'readwrite');
+      const store = tx.objectStore('transactions');
+      store.clear();
+      transactions.forEach(item => {
+        store.put(item);
+      });
+    }
+
+    async function persistReceipt(voucherId, receiptData) {
+      receipts[voucherId] = receiptData;
+      try {
+        localStorage.setItem('pcm_receipts', JSON.stringify(receipts));
+      } catch (e) {}
+
+      if (!dbInstance) return;
+      const tx = dbInstance.transaction(['receipts'], 'readwrite');
+      const store = tx.objectStore('receipts');
+      if (receiptData) {
+        store.put({ voucherId, ...receiptData });
+      } else {
+        store.delete(voucherId);
+      }
+    }
+
+    async function persistSettings() {
+      try {
+        localStorage.setItem('pcm_float', imprestFloat);
+        localStorage.setItem('pcm_currency', currencySymbol);
+      } catch (e) {}
+
+      if (!dbInstance) return;
+      const tx = dbInstance.transaction(['settings'], 'readwrite');
+      const store = tx.objectStore('settings');
+      store.put({ key: 'imprestFloat', value: imprestFloat });
+      store.put({ key: 'currencySymbol', value: currencySymbol });
+    }
+
+    /* --------------------------------------------------------------------------
+       SAMPLE RECEIPT GENERATOR (Creates visual mock receipts for sample data)
+       -------------------------------------------------------------------------- */
+    function generateMockReceiptSvg(storeName, voucherNo, items, totalAmt, date) {
+      const svg = `
+        <svg xmlns="http://www.w3.org/2000/svg" width="400" height="520" viewBox="0 0 400 520" style="background:#fff; font-family:'Courier New', monospace; font-size:12px;">
+          <rect width="100%" height="100%" fill="#fffcf7"/>
+          <rect x="15" y="15" width="370" height="490" fill="none" stroke="#e2e8f0" stroke-width="2" stroke-dasharray="6,4"/>
+          <text x="200" y="50" text-anchor="middle" font-weight="bold" font-size="16" fill="#1e293b">${storeName}</text>
+          <text x="200" y="70" text-anchor="middle" font-size="11" fill="#64748b">OFFICIAL TAX INVOICE &amp; RECEIPT</text>
+          <line x1="30" y1="85" x2="370" y2="85" stroke="#cbd5e1" stroke-width="1"/>
+          <text x="35" y="105" fill="#475569">Voucher: ${voucherNo}</text>
+          <text x="250" y="105" fill="#475569">Date: ${date}</text>
+          <text x="35" y="125" fill="#475569">Cashier: Station 04</text>
+          <text x="250" y="125" fill="#475569">Payment: CASH</text>
+          <line x1="30" y1="140" x2="370" y2="140" stroke="#cbd5e1" stroke-width="1"/>
+          <text x="35" y="160" font-weight="bold" fill="#334155">ITEM DESCRIPTION</text>
+          <text x="320" y="160" font-weight="bold" fill="#334155">AMT</text>
+          ${items.map((it, i) => `
+            <text x="35" y="${185 + i*25}" fill="#1e293b">${it.name}</text>
+            <text x="320" y="${185 + i*25}" fill="#1e293b">${it.amt}</text>
+          `).join('')}
+          <line x1="30" y1="360" x2="370" y2="360" stroke="#cbd5e1" stroke-width="1"/>
+          <text x="35" y="390" font-weight="bold" font-size="14" fill="#0f172a">TOTAL PAID:</text>
+          <text x="300" y="390" font-weight="bold" font-size="16" fill="#15803d">${totalAmt}</text>
+          <text x="200" y="440" text-anchor="middle" font-size="10" fill="#94a3b8">*** THANK YOU FOR YOUR BUSINESS ***</text>
+          <text x="200" y="460" text-anchor="middle" font-size="9" fill="#94a3b8">AUDIT TRACEABILITY CODE: #PC-${voucherNo}-VERIFIED</text>
+        </svg>
+      `;
+      return 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg);
+    }
+
+    function initSeedData() {
+      transactions = [
+        { id: 1, date: '2026-11-01', voucherNo: 'FLOAT-01', details: 'Opening Imprest Float Allocation', type: 'received', amount: 500.00, category: '' },
+        { id: 2, date: '2026-11-02', voucherNo: 'V-101', details: 'A4 Printing Paper & Gel Pens', type: 'paid', amount: 32.50, category: 'stationery' },
+        { id: 3, date: '2026-11-03', voucherNo: 'V-102', details: 'Emergency Petrol for Generator (15L)', type: 'paid', amount: 45.00, category: 'energy' },
+        { id: 4, date: '2026-11-04', voucherNo: 'V-103', details: 'Taxi fare for bank deposit run', type: 'paid', amount: 12.00, category: 'transport' },
+        { id: 5, date: '2026-11-05', voucherNo: 'V-104', details: 'Coffee, milk and biscuits for clients', type: 'paid', amount: 24.80, category: 'refreshment' },
+        { id: 6, date: '2026-11-06', voucherNo: 'V-105', details: 'Disinfectants & trash bags', type: 'paid', amount: 18.50, category: 'sanitation' },
+        { id: 7, date: '2026-11-07', voucherNo: 'V-106', details: 'Door lock replacement & repair', type: 'paid', amount: 35.00, category: 'maintenance' },
+        { id: 8, date: '2026-11-08', voucherNo: 'V-107', details: 'Prepaid Electricity Token topup', type: 'paid', amount: 30.00, category: 'energy' },
+        { id: 9, date: '2026-11-09', voucherNo: 'V-108', details: 'Daily newspaper subscription', type: 'paid', amount: 8.00, category: 'miscellaneous' }
+      ];
+
+      // Seed 3 realistic visual receipts for demonstration
+      receipts['V-101'] = {
+        voucherId: 'V-101',
+        dataUrl: generateMockReceiptSvg('METRO OFFICE SUPPLIES', 'V-101', [{name: '2x A4 Ream Paper', amt: '$18.00'}, {name: '1x Pack Gel Pens (10)', amt: '$14.50'}], '$32.50', '2026-11-02'),
+        fileType: 'image/svg+xml',
+        fileName: 'Paper_Supplies_Invoice.svg',
+        fileSize: '4.2 KB',
+        isCamera: false,
+        timestamp: new Date().toISOString()
+      };
+
+      receipts['V-102'] = {
+        voucherId: 'V-102',
+        dataUrl: generateMockReceiptSvg('TOTAL ENERGIES STATION', 'V-102', [{name: '15.0L Super Unleaded', amt: '$45.00'}], '$45.00', '2026-11-03'),
+        fileType: 'image/svg+xml',
+        fileName: 'Generator_Fuel_Receipt.svg',
+        fileSize: '3.8 KB',
+        isCamera: true,
+        timestamp: new Date().toISOString()
+      };
+
+      receipts['V-104'] = {
+        voucherId: 'V-104',
+        dataUrl: generateMockReceiptSvg('CITY SUPERMARKET', 'V-104', [{name: 'Nescafe Coffee 200g', amt: '$12.50'}, {name: 'Fresh Milk 2L', amt: '$4.30'}, {name: 'Digestive Biscuits', amt: '$8.00'}], '$24.80', '2026-11-05'),
+        fileType: 'image/svg+xml',
+        fileName: 'Client_Coffee_Receipt.svg',
+        fileSize: '4.1 KB',
+        isCamera: false,
+        timestamp: new Date().toISOString()
+      };
+
+      persistTransactions();
+      Object.keys(receipts).forEach(k => persistReceipt(k, receipts[k]));
+      persistSettings();
+    }
+
+    /* --------------------------------------------------------------------------
+       APP INITIALIZATION
+       -------------------------------------------------------------------------- */
+    window.addEventListener('DOMContentLoaded', async () => {
+      await openDatabase();
+      await loadAllFromStorage();
+
+      if (!transactions || transactions.length === 0) {
+        initSeedData();
+      }
+
+      document.getElementById('currencySelect').value = currencySymbol;
+      document.querySelectorAll('.curSymbol').forEach(el => el.textContent = currencySymbol);
+
+      // Default quick entry and voucher date to today
+      const todayStr = new Date().toISOString().slice(0, 10);
+      document.getElementById('qaDate').value = todayStr;
+      document.getElementById('voucherDate').value = todayStr;
+      document.getElementById('repDate').value = todayStr;
+
+      renderTable();
+      updateDashboardCards();
+    });
+
+    /* --------------------------------------------------------------------------
+       CURRENCY & MONEY FORMATTING
+       -------------------------------------------------------------------------- */
+    function changeCurrency(val) {
+      currencySymbol = val;
+      document.querySelectorAll('.curSymbol').forEach(el => el.textContent = val);
+      persistSettings();
+      renderTable();
+      updateDashboardCards();
+      showToast('Currency set to ' + val);
+    }
+
+    function formatMoney(amount) {
+      return currencySymbol + ' ' + Number(amount || 0).toLocaleString(undefined, {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+      });
+    }
+
+    /* --------------------------------------------------------------------------
+       CORE SPREADSHEET CALCULATIONS & TABLE RENDERING
+       -------------------------------------------------------------------------- */
+    function getFilteredTransactions() {
+      const q = (document.getElementById('searchInput').value || '').toLowerCase().trim();
+      const cat = document.getElementById('categoryFilter').value;
+      const rec = document.getElementById('receiptFilter').value;
+      const dt = document.getElementById('dateFilter').value;
+
+      return transactions.filter(t => {
+        const matchesQ = !q || t.details.toLowerCase().includes(q) || t.voucherNo.toLowerCase().includes(q);
+        const matchesCat = (cat === 'ALL') || (t.category === cat);
+        const matchesDate = !dt || (t.date === dt);
+
+        let matchesRec = true;
+        if (rec === 'ATTACHED') {
+          matchesRec = (t.type === 'received') || Boolean(receipts[t.voucherNo]);
+        } else if (rec === 'MISSING') {
+          matchesRec = (t.type === 'paid') && !Boolean(receipts[t.voucherNo]);
+        }
+
+        return matchesQ && matchesCat && matchesDate && matchesRec;
+      });
+    }
+
+    function resetFilters() {
+      document.getElementById('searchInput').value = '';
+      document.getElementById('categoryFilter').value = 'ALL';
+      document.getElementById('receiptFilter').value = 'ALL';
+      document.getElementById('dateFilter').value = '';
+      renderTable();
+    }
+
+    function renderTable() {
+      const tbody = document.getElementById('pettyCashTbody');
+      const tfoot = document.getElementById('pettyCashTfoot');
+
+      // Sort chronological by date, then id
+      const sorted = [...transactions].sort((a, b) => {
+        const d1 = new Date(a.date).getTime();
+        const d2 = new Date(b.date).getTime();
+        if (d1 !== d2) return d1 - d2;
+        return a.id - b.id;
+      });
+
+      // Compute running balance across all transactions
+      let cumulativeBalance = 0;
+      const balanceMap = {};
+      sorted.forEach(t => {
+        if (t.type === 'received') {
+          cumulativeBalance += t.amount;
+        } else {
+          cumulativeBalance -= t.amount;
+        }
+        balanceMap[t.id] = cumulativeBalance;
+      });
+
+      // Apply active search/filters
+      const filtered = getFilteredTransactions();
+      filtered.sort((a, b) => {
+        const d1 = new Date(a.date).getTime();
+        const d2 = new Date(b.date).getTime();
+        if (d1 !== d2) return d1 - d2;
+        return a.id - b.id;
+      });
+
+      tbody.innerHTML = '';
+
+      let catTotals = {
+        stationery: 0,
+        transport: 0,
+        refreshment: 0,
+        maintenance: 0,
+        sanitation: 0,
+        energy: 0,
+        miscellaneous: 0
+      };
+
+      let totalRecSum = 0;
+      let totalPaidSum = 0;
+
+      if (filtered.length === 0) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="15" style="text-align:center; padding:2.5rem; color:var(--color-slate-400);">
+              No petty cash records found matching your query.
+            </td>
+          </tr>
+        `;
+      } else {
+        filtered.forEach(t => {
+          const isReceived = t.type === 'received';
+          const recAmt = isReceived ? t.amount : 0;
+          const paidAmt = !isReceived ? t.amount : 0;
+
+          totalRecSum += recAmt;
+          totalPaidSum += paidAmt;
+
+          if (!isReceived && t.category && catTotals.hasOwnProperty(t.category)) {
+            catTotals[t.category] += paidAmt;
+          }
+
+          const runningBal = balanceMap[t.id] || 0;
+          const hasReceipt = Boolean(receipts[t.voucherNo]);
+
+          const tr = document.createElement('tr');
+
+          // Receipt indicator badge
+          let receiptBadgeHtml = '';
+          if (isReceived) {
+            receiptBadgeHtml = `<span class="badge badge-replenish">Float / In</span>`;
+          } else if (hasReceipt) {
+            receiptBadgeHtml = `
+              <button onclick="openReceiptViewer('${t.voucherNo}')" class="badge badge-receipt-ok" title="View attached receipt">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                <span>Receipt OK</span>
+              </button>
+            `;
+          } else {
+            receiptBadgeHtml = `
+              <button onclick="promptAttachReceipt('${t.voucherNo}')" class="badge badge-receipt-missing" title="Click to scan or upload missing receipt">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                <span>⚠️ Missing</span>
+              </button>
+            `;
+          }
+
+          tr.innerHTML = `
+            <td style="color:var(--color-slate-600);">${t.date}</td>
+            <td style="font-weight:700; color:var(--color-slate-800);">${t.voucherNo}</td>
+            <td class="editable-cell" onclick="quickEditDetails(${t.id}, '${t.details.replace(/'/g, "\\'")}')" title="Click to edit particulars">${t.details}</td>
+            <td class="num-cell rec-cell">${recAmt ? formatMoney(recAmt) : '—'}</td>
+            <td class="num-cell paid-cell">${paidAmt ? formatMoney(paidAmt) : '—'}</td>
+            <td class="num-cell balance-cell">${formatMoney(runningBal)}</td>
+            <td style="text-align:center;">${receiptBadgeHtml}</td>
+            
+            <!-- Analytical Columns -->
+            <td class="num-cell ${t.category==='stationery' ? 'font-bold' : ''}">${t.category==='stationery' ? formatMoney(t.amount) : '—'}</td>
+            <td class="num-cell ${t.category==='transport' ? 'font-bold' : ''}">${t.category==='transport' ? formatMoney(t.amount) : '—'}</td>
+            <td class="num-cell ${t.category==='refreshment' ? 'font-bold' : ''}">${t.category==='refreshment' ? formatMoney(t.amount) : '—'}</td>
+            <td class="num-cell ${t.category==='maintenance' ? 'font-bold' : ''}">${t.category==='maintenance' ? formatMoney(t.amount) : '—'}</td>
+            <td class="num-cell ${t.category==='sanitation' ? 'font-bold' : ''}">${t.category==='sanitation' ? formatMoney(t.amount) : '—'}</td>
+            <td class="num-cell ${t.category==='energy' ? 'font-bold' : ''}" style="${t.category==='energy' ? 'color:var(--color-amber-700); font-weight:700;' : ''}">${t.category==='energy' ? formatMoney(t.amount) : '—'}</td>
+            <td class="num-cell ${t.category==='miscellaneous' ? 'font-bold' : ''}">${t.category==='miscellaneous' ? formatMoney(t.amount) : '—'}</td>
+
+            <!-- Action buttons -->
+            <td style="text-align:center;" class="no-print">
+              ${isReceived ? `<span style="color:var(--color-slate-300);">—</span>` : `
+                <div style="display:inline-flex; gap:3px;">
+                  <button onclick="openVoucherModal(${t.id})" class="btn btn-secondary btn-sm" style="padding:2px 5px;" title="Edit voucher">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+                  </button>
+                  <button onclick="deleteVoucher(${t.id})" class="btn btn-danger btn-sm" style="padding:2px 5px;" title="Delete voucher">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                  </button>
+                </div>
+              `}
+            </td>
+          `;
+
+          tbody.appendChild(tr);
+        });
+      }
+
+      // Render Footer Analytical Totals
+      tfoot.innerHTML = `
+        <tr>
+          <td colspan="3" style="text-align:right; text-transform:uppercase; font-size:10px; padding:8px 10px;">
+            Total Receipts &amp; Disbursements:
+          </td>
+          <td class="num-cell" style="background:var(--color-emerald-100); color:var(--color-emerald-800); font-size:12px;">${formatMoney(totalRecSum)}</td>
+          <td class="num-cell" style="background:var(--color-rose-100); color:var(--color-rose-800); font-size:12px;">${formatMoney(totalPaidSum)}</td>
+          <td class="num-cell" style="background:var(--color-slate-200); font-size:12px;">${formatMoney(totalRecSum - totalPaidSum)}</td>
+          <td></td>
+          <td class="num-cell">${formatMoney(catTotals.stationery)}</td>
+          <td class="num-cell">${formatMoney(catTotals.transport)}</td>
+          <td class="num-cell">${formatMoney(catTotals.refreshment)}</td>
+          <td class="num-cell">${formatMoney(catTotals.maintenance)}</td>
+          <td class="num-cell">${formatMoney(catTotals.sanitation)}</td>
+          <td class="num-cell" style="color:var(--color-amber-800);">${formatMoney(catTotals.energy)}</td>
+          <td class="num-cell">${formatMoney(catTotals.miscellaneous)}</td>
+          <td class="no-print"></td>
+        </tr>
+      `;
+    }
+
+    /* --------------------------------------------------------------------------
+       DASHBOARD OVERVIEW CARDS UPDATE
+       -------------------------------------------------------------------------- */
+    function updateDashboardCards() {
+      // Calculate disbursements
+      const totalDisbursed = transactions
+        .filter(t => t.type === 'paid')
+        .reduce((sum, t) => sum + t.amount, 0);
+
+      // Total received (opening float + replenishments)
+      const totalReceived = transactions
+        .filter(t => t.type === 'received')
+        .reduce((sum, t) => sum + t.amount, 0);
+
+      const cashInHand = totalReceived - totalDisbursed;
+      const reimbursementDue = totalDisbursed; // Imprest system rule: Reimbursement = sum of vouchers
+      const percentUsed = Math.min(100, Math.round((totalDisbursed / (imprestFloat || 1)) * 100)) || 0;
+      const voucherCount = transactions.filter(t => t.type === 'paid').length;
+
+      document.getElementById('cardFloatVal').textContent = formatMoney(imprestFloat);
+      document.getElementById('cardSpentVal').textContent = formatMoney(totalDisbursed);
+      document.getElementById('cardBalanceVal').textContent = formatMoney(cashInHand);
+      document.getElementById('cardClaimVal').textContent = formatMoney(reimbursementDue);
+
+      document.getElementById('cardSpentPercent').textContent = `${percentUsed}% of Float Spent`;
+      document.getElementById('voucherCount').textContent = `${voucherCount} vouchers logged`;
+
+      // Update progress bar & health status
+      const bar = document.getElementById('balanceProgressBar');
+      const hint = document.getElementById('cashStatusHint');
+      const remPercent = Math.max(0, 100 - percentUsed);
+      bar.style.width = remPercent + '%';
+
+      if (remPercent < 20) {
+        bar.style.background = 'var(--color-rose-500)';
+        hint.textContent = 'Critical Low - Replenish Now!';
+        hint.style.color = 'var(--color-rose-600)';
+      } else if (remPercent < 50) {
+        bar.style.background = 'var(--color-amber-500)';
+        hint.textContent = 'Moderate - Prepare Claim';
+        hint.style.color = 'var(--color-amber-600)';
+      } else {
+        bar.style.background = 'var(--color-emerald-600)';
+        hint.textContent = 'Adequate Cash in Tin';
+        hint.style.color = 'var(--color-emerald-700)';
+      }
+    }
+
+    /* --------------------------------------------------------------------------
+       QUICK ADD & INLINE CELL EDITING
+       -------------------------------------------------------------------------- */
+    function saveQuickAdd() {
+      const date = document.getElementById('qaDate').value;
+      let voucherNo = document.getElementById('qaVoucher').value.trim();
+      const details = document.getElementById('qaDetails').value.trim();
+      const category = document.getElementById('qaCategory').value;
+      const amount = parseFloat(document.getElementById('qaAmount').value);
+
+      if (!date || !details || isNaN(amount) || amount <= 0) {
+        showToast('Please enter date, description, and valid amount');
+        return;
+      }
+
+      if (!voucherNo) {
+        const nextNum = 100 + transactions.filter(t => t.type === 'paid').length + 1;
+        voucherNo = 'V-' + nextNum;
+      }
+
+      const newTx = {
+        id: Date.now(),
+        date,
+        voucherNo,
+        details,
+        type: 'paid',
+        amount,
+        category
+      };
+
+      transactions.push(newTx);
+      persistTransactions();
+
+      // Reset quick add fields
+      document.getElementById('qaVoucher').value = '';
+      document.getElementById('qaDetails').value = '';
+      document.getElementById('qaAmount').value = '';
+
+      renderTable();
+      updateDashboardCards();
+      showToast('Voucher ' + voucherNo + ' added to ledger');
+    }
+
+    function quickEditDetails(id, currentText) {
+      const newText = prompt('Edit description / particulars:', currentText);
+      if (newText !== null && newText.trim() !== '') {
+        const tx = transactions.find(t => t.id === id);
+        if (tx) {
+          tx.details = newText.trim();
+          persistTransactions();
+          renderTable();
+          showToast('Updated description');
+        }
+      }
+    }
+
+    /* --------------------------------------------------------------------------
+       VOUCHER MODAL (CREATE / EDIT)
+       -------------------------------------------------------------------------- */
+    let tempModalReceipt = null;
+
+    function openVoucherModal(editId = null) {
+      const modal = document.getElementById('voucherModal');
+      const form = document.getElementById('voucherForm');
+      form.reset();
+      tempModalReceipt = null;
+      document.getElementById('modalReceiptStatus').style.display = 'none';
+
+      document.getElementById('voucherDate').valueAsDate = new Date();
+      document.getElementById('voucherId').value = '';
+
+      if (editId) {
+        const item = transactions.find(t => t.id === editId);
+        if (item && item.type === 'paid') {
+          document.getElementById('voucherModalTitle').textContent = 'Edit Petty Cash Voucher';
+          document.getElementById('voucherId').value = item.id;
+          document.getElementById('voucherDate').value = item.date;
+          document.getElementById('voucherNo').value = item.voucherNo;
+          document.getElementById('voucherDetails').value = item.details;
+          document.getElementById('voucherCategory').value = item.category;
+          document.getElementById('voucherAmount').value = item.amount;
+
+          if (receipts[item.voucherNo]) {
+            tempModalReceipt = receipts[item.voucherNo];
+            document.getElementById('modalReceiptStatus').style.display = 'flex';
+            document.getElementById('modalReceiptStatusText').textContent = '📎 Attached: ' + (tempModalReceipt.fileName || 'Scanned Receipt');
+          }
+        }
+      } else {
+        document.getElementById('voucherModalTitle').textContent = 'Record Petty Cash Expense';
+        const nextVNo = 'V-' + (100 + transactions.filter(t => t.type === 'paid').length + 1);
+        document.getElementById('voucherNo').value = nextVNo;
+      }
+
+      modal.classList.add('active');
+    }
+
+    function closeVoucherModal() {
+      document.getElementById('voucherModal').classList.remove('active');
+      tempModalReceipt = null;
+    }
+
+    function handleModalReceiptSelect(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = function(evt) {
+        tempModalReceipt = {
+          dataUrl: evt.target.result,
+          fileType: file.type,
+          fileName: file.name,
+          fileSize: (file.size / 1024).toFixed(1) + ' KB',
+          isCamera: false,
+          timestamp: new Date().toISOString()
+        };
+        document.getElementById('modalReceiptStatus').style.display = 'flex';
+        document.getElementById('modalReceiptStatusText').textContent = '📎 Attached: ' + file.name;
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function clearModalReceipt() {
+      tempModalReceipt = null;
+      document.getElementById('voucherReceiptInput').value = '';
+      document.getElementById('modalReceiptStatus').style.display = 'none';
+    }
+
+    function triggerScanForVoucherModal() {
+      const vNo = document.getElementById('voucherNo').value.trim() || 'V-' + Date.now();
+      openCameraModal(vNo, (scannedData) => {
+        tempModalReceipt = scannedData;
+        document.getElementById('modalReceiptStatus').style.display = 'flex';
+        document.getElementById('modalReceiptStatusText').textContent = '📷 Scanned: ' + scannedData.fileName;
+      });
+    }
+
+    function saveVoucher(e) {
+      e.preventDefault();
+      const id = document.getElementById('voucherId').value;
+      const date = document.getElementById('voucherDate').value;
+      const voucherNo = document.getElementById('voucherNo').value.trim();
+      const details = document.getElementById('voucherDetails').value.trim();
+      const category = document.getElementById('voucherCategory').value;
+      const amount = parseFloat(document.getElementById('voucherAmount').value);
+
+      if (!date || !voucherNo || !details || isNaN(amount) || amount <= 0) {
+        showToast('Please fill out all required fields');
+        return;
+      }
+
+      if (id) {
+        // Edit existing
+        const idx = transactions.findIndex(t => t.id == id);
+        if (idx !== -1) {
+          const oldVNo = transactions[idx].voucherNo;
+          transactions[idx] = { ...transactions[idx], date, voucherNo, details, category, amount };
+
+          if (tempModalReceipt) {
+            persistReceipt(voucherNo, { ...tempModalReceipt, voucherId: voucherNo });
+          } else if (oldVNo !== voucherNo && receipts[oldVNo]) {
+            const oldRec = receipts[oldVNo];
+            persistReceipt(voucherNo, { ...oldRec, voucherId: voucherNo });
+            persistReceipt(oldVNo, null);
+          }
+          showToast('Voucher updated successfully');
+        }
+      } else {
+        // Create new
+        const newTx = {
+          id: Date.now(),
+          date,
+          voucherNo,
+          details,
+          type: 'paid',
+          amount,
+          category
+        };
+        transactions.push(newTx);
+
+        if (tempModalReceipt) {
+          persistReceipt(voucherNo, { ...tempModalReceipt, voucherId: voucherNo });
+        }
+        showToast('New voucher added');
+      }
+
+      persistTransactions();
+      closeVoucherModal();
+      renderTable();
+      updateDashboardCards();
+    }
+
+    function deleteVoucher(id) {
+      const tx = transactions.find(t => t.id === id);
+      if (tx && tx.voucherNo === 'FLOAT-01') {
+        showToast('Cannot delete opening float entry');
+        return;
+      }
+      if (confirm('Are you sure you want to delete this voucher?')) {
+        if (tx && receipts[tx.voucherNo]) {
+          persistReceipt(tx.voucherNo, null);
+        }
+        transactions = transactions.filter(t => t.id !== id);
+        persistTransactions();
+        renderTable();
+        updateDashboardCards();
+        showToast('Voucher removed');
+      }
+    }
+
+    /* --------------------------------------------------------------------------
+       RECEIPT CAMERA SCANNER (100% Client-Side Video & Canvas)
+       -------------------------------------------------------------------------- */
+    let scanSuccessCallback = null;
+
+    function openScanReceiptQuick() {
+      // Find the first voucher without a receipt, or generate a new voucher
+      const missing = transactions.find(t => t.type === 'paid' && !receipts[t.voucherNo]);
+      const targetVoucher = missing ? missing.voucherNo : 'V-' + (100 + transactions.filter(t => t.type === 'paid').length + 1);
+      openCameraModal(targetVoucher);
+    }
+
+    function promptAttachReceipt(voucherNo) {
+      openCameraModal(voucherNo);
+    }
+
+    async function openCameraModal(targetVoucherId, callback = null) {
+      currentScanTargetVoucherId = targetVoucherId;
+      scanSuccessCallback = callback;
+      currentRotation = 0;
+      currentFilter = 'normal';
+
+      const modal = document.getElementById('cameraModal');
+      document.getElementById('cameraStreamView').style.display = 'flex';
+      document.getElementById('cameraLiveControls').style.display = 'flex';
+      document.getElementById('cameraCapturedView').style.display = 'none';
+      document.getElementById('retakeBtn').style.display = 'none';
+      document.getElementById('confirmScanBtn').style.display = 'none';
+      document.getElementById('cameraFallbackNotice').style.display = 'none';
+
+      modal.classList.add('active');
+
+      // Attempt live webcam stream
+      try {
+        if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+          cameraMediaStream = await navigator.mediaDevices.getUserMedia({
+            video: {
+              facingMode: { ideal: 'environment' },
+              width: { ideal: 1920 },
+              height: { ideal: 1080 }
+            }
+          });
+          const video = document.getElementById('cameraVideo');
+          video.srcObject = cameraMediaStream;
+          await video.play();
+        } else {
+          showCameraFallback();
+        }
+      } catch (err) {
+        console.warn('Camera stream error (expected if running directly from file:// origin):', err);
+        showCameraFallback();
+      }
+    }
+
+    function showCameraFallback() {
+      document.getElementById('cameraStreamView').style.display = 'none';
+      document.getElementById('cameraLiveControls').style.display = 'none';
+      document.getElementById('cameraFallbackNotice').style.display = 'block';
+    }
+
+    function closeCameraModal() {
+      if (cameraMediaStream) {
+        cameraMediaStream.getTracks().forEach(track => track.stop());
+        cameraMediaStream = null;
+      }
+      document.getElementById('cameraModal').classList.remove('active');
+    }
+
+    function captureSnapshot() {
+      const video = document.getElementById('cameraVideo');
+      if (!video || !video.videoWidth) return;
+
+      const canvas = document.createElement('canvas');
+      canvas.width = video.videoWidth;
+      canvas.height = video.videoHeight;
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+      capturedCanvasData = canvas;
+      displayCapturedImage();
+
+      // Stop camera stream once captured
+      if (cameraMediaStream) {
+        cameraMediaStream.getTracks().forEach(track => track.stop());
+        cameraMediaStream = null;
+      }
+
+      document.getElementById('cameraStreamView').style.display = 'none';
+      document.getElementById('cameraLiveControls').style.display = 'none';
+      document.getElementById('cameraCapturedView').style.display = 'block';
+      document.getElementById('retakeBtn').style.display = 'inline-flex';
+      document.getElementById('confirmScanBtn').style.display = 'inline-flex';
+    }
+
+    function displayCapturedImage() {
+      if (!capturedCanvasData) return;
+      const previewImg = document.getElementById('capturedImagePreview');
+      previewImg.src = capturedCanvasData.toDataURL('image/jpeg', 0.9);
+      previewImg.style.transform = `rotate(${currentRotation}deg)`;
+      applyFilterToImgElement(previewImg, currentFilter);
+    }
+
+    function rotateCapturedImage() {
+      currentRotation = (currentRotation + 90) % 360;
+      document.getElementById('capturedImagePreview').style.transform = `rotate(${currentRotation}deg)`;
+    }
+
+    function applyScanFilter(filterType) {
+      currentFilter = filterType;
+      document.querySelectorAll('.filter-pill-btn').forEach(btn => btn.classList.remove('active'));
+      if (filterType === 'normal') document.getElementById('fltNormal').classList.add('active');
+      if (filterType === 'contrast') document.getElementById('fltContrast').classList.add('active');
+      if (filterType === 'bw') document.getElementById('fltBw').classList.add('active');
+
+      applyFilterToImgElement(document.getElementById('capturedImagePreview'), filterType);
+    }
+
+    function applyFilterToImgElement(img, filterType) {
+      if (filterType === 'contrast') {
+        img.style.filter = 'contrast(160%) brightness(105%) grayscale(30%)';
+      } else if (filterType === 'bw') {
+        img.style.filter = 'grayscale(100%) contrast(180%) brightness(110%)';
+      } else {
+        img.style.filter = 'none';
+      }
+    }
+
+    function retakePhoto() {
+      openCameraModal(currentScanTargetVoucherId, scanSuccessCallback);
+    }
+
+    function handleFallbackUpload(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = function(evt) {
+        const receiptObj = {
+          dataUrl: evt.target.result,
+          fileType: file.type,
+          fileName: file.name,
+          fileSize: (file.size / 1024).toFixed(1) + ' KB',
+          isCamera: true,
+          timestamp: new Date().toISOString()
+        };
+
+        if (scanSuccessCallback) {
+          scanSuccessCallback(receiptObj);
+        } else {
+          persistReceipt(currentScanTargetVoucherId, receiptObj);
+          renderTable();
+          showToast('Receipt attached to ' + currentScanTargetVoucherId);
+        }
+        closeCameraModal();
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function confirmScanAttachment() {
+      if (!capturedCanvasData) return;
+
+      // Render rotation & filter onto a final canvas
+      const finalCanvas = document.createElement('canvas');
+      const isRotated90 = (currentRotation === 90 || currentRotation === 270);
+      finalCanvas.width = isRotated90 ? capturedCanvasData.height : capturedCanvasData.width;
+      finalCanvas.height = isRotated90 ? capturedCanvasData.width : capturedCanvasData.height;
+      const ctx = finalCanvas.getContext('2d');
+
+      ctx.translate(finalCanvas.width / 2, finalCanvas.height / 2);
+      ctx.rotate((currentRotation * Math.PI) / 180);
+      ctx.drawImage(capturedCanvasData, -capturedCanvasData.width / 2, -capturedCanvasData.height / 2);
+
+      const finalDataUrl = finalCanvas.toDataURL('image/jpeg', 0.88);
+
+      const receiptObj = {
+        dataUrl: finalDataUrl,
+        fileType: 'image/jpeg',
+        fileName: `Receipt_Scan_${currentScanTargetVoucherId}.jpg`,
+        fileSize: Math.round(finalDataUrl.length * 0.75 / 1024) + ' KB',
+        isCamera: true,
+        timestamp: new Date().toISOString()
+      };
+
+      if (scanSuccessCallback) {
+        scanSuccessCallback(receiptObj);
+      } else {
+        persistReceipt(currentScanTargetVoucherId, receiptObj);
+        renderTable();
+        showToast('Receipt scanned & attached to ' + currentScanTargetVoucherId);
+      }
+
+      closeCameraModal();
+    }
+
+    /* --------------------------------------------------------------------------
+       RECEIPT LIGHTBOX VIEWER
+       -------------------------------------------------------------------------- */
+    function openReceiptViewer(voucherNo) {
+      const receipt = receipts[voucherNo];
+      if (!receipt) {
+        showToast('No receipt found for ' + voucherNo);
+        return;
+      }
+
+      currentViewingVoucherId = voucherNo;
+      rvZoom = 1;
+      rvRotation = 0;
+
+      const tx = transactions.find(t => t.voucherNo === voucherNo) || {};
+      document.getElementById('rvTitle').querySelector('span').textContent = 'Receipt: ' + voucherNo;
+      document.getElementById('rvSubtitle').textContent = tx.details || 'Petty cash disbursement';
+
+      document.getElementById('rvMetaVoucher').textContent = voucherNo;
+      document.getElementById('rvMetaDate').textContent = tx.date || '--';
+      document.getElementById('rvMetaAmount').textContent = formatMoney(tx.amount || 0);
+      document.getElementById('rvMetaCategory').textContent = (tx.category || '--').toUpperCase();
+      document.getElementById('rvMetaDetails').textContent = tx.details || '--';
+
+      const img = document.getElementById('rvImage');
+      const pdf = document.getElementById('rvPdfFrame');
+
+      if (receipt.fileType === 'application/pdf') {
+        img.style.display = 'none';
+        pdf.style.display = 'block';
+        pdf.src = receipt.dataUrl;
+      } else {
+        pdf.style.display = 'none';
+        img.style.display = 'block';
+        img.src = receipt.dataUrl;
+        img.style.transform = `scale(${rvZoom}) rotate(${rvRotation}deg)`;
+      }
+
+      document.getElementById('receiptViewerModal').classList.add('active');
+    }
+
+    function closeReceiptViewer() {
+      document.getElementById('receiptViewerModal').classList.remove('active');
+      document.getElementById('rvPdfFrame').src = '';
+    }
+
+    function zoomRvImage(factor) {
+      rvZoom = Math.min(3, Math.max(0.4, rvZoom * factor));
+      document.getElementById('rvImage').style.transform = `scale(${rvZoom}) rotate(${rvRotation}deg)`;
+    }
+
+    function resetRvImage() {
+      rvZoom = 1;
+      rvRotation = 0;
+      document.getElementById('rvImage').style.transform = `scale(1) rotate(0deg)`;
+    }
+
+    function rotateRvImage() {
+      rvRotation = (rvRotation + 90) % 360;
+      document.getElementById('rvImage').style.transform = `scale(${rvZoom}) rotate(${rvRotation}deg)`;
+    }
+
+    function downloadCurrentReceipt() {
+      const receipt = receipts[currentViewingVoucherId];
+      if (!receipt) return;
+      const a = document.createElement('a');
+      a.href = receipt.dataUrl;
+      a.download = receipt.fileName || `Receipt_${currentViewingVoucherId}.jpg`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      showToast('Downloading receipt file');
+    }
+
+    function deleteCurrentReceipt() {
+      if (confirm('Delete receipt document for ' + currentViewingVoucherId + '?')) {
+        persistReceipt(currentViewingVoucherId, null);
+        closeReceiptViewer();
+        renderTable();
+        showToast('Receipt removed');
+      }
+    }
+
+    function printSingleVoucher() {
+      const tx = transactions.find(t => t.voucherNo === currentViewingVoucherId);
+      const receipt = receipts[currentViewingVoucherId];
+      if (!tx || !receipt) return;
+
+      document.getElementById('pvVoucherNo').textContent = tx.voucherNo;
+      document.getElementById('pvDate').textContent = tx.date;
+      document.getElementById('pvDetails').textContent = tx.details;
+      document.getElementById('pvCategory').textContent = (tx.category || '').toUpperCase();
+      document.getElementById('pvAmount').textContent = formatMoney(tx.amount);
+      document.getElementById('pvReceiptImg').src = receipt.dataUrl;
+
+      // Show single voucher print section and trigger print
+      document.getElementById('printSingleVoucherArea').style.display = 'block';
+      document.getElementById('printRequisitionArea').style.display = 'none';
+
+      window.print();
+
+      setTimeout(() => {
+        document.getElementById('printSingleVoucherArea').style.display = 'none';
+      }, 1000);
+    }
+
+    /* --------------------------------------------------------------------------
+       IMPREST FLOAT CONFIGURATION & REPLENISHMENT MODALS
+       -------------------------------------------------------------------------- */
+    function openFloatModal() {
+      document.getElementById('floatAmountInput').value = imprestFloat;
+      document.getElementById('floatModal').classList.add('active');
+    }
+
+    function closeFloatModal() {
+      document.getElementById('floatModal').classList.remove('active');
+    }
+
+    function saveFloat(e) {
+      e.preventDefault();
+      const val = parseFloat(document.getElementById('floatAmountInput').value);
+      if (val > 0) {
+        imprestFloat = val;
+        // Update initial opening float entry if exists
+        const opening = transactions.find(t => t.voucherNo === 'FLOAT-01');
+        if (opening) {
+          opening.amount = val;
+          persistTransactions();
+        }
+        persistSettings();
+        closeFloatModal();
+        renderTable();
+        updateDashboardCards();
+        showToast('Fixed imprest float updated to ' + formatMoney(val));
+      }
+    }
+
+    function openReplenishModal() {
+      const totalDisbursed = transactions
+        .filter(t => t.type === 'paid')
+        .reduce((sum, t) => sum + t.amount, 0);
+      const totalReceived = transactions
+        .filter(t => t.type === 'received')
+        .reduce((sum, t) => sum + t.amount, 0);
+      const cashInHand = totalReceived - totalDisbursed;
+      const due = totalDisbursed;
+
+      document.getElementById('repCurrentCash').textContent = formatMoney(cashInHand);
+      document.getElementById('repFloatVal').textContent = formatMoney(imprestFloat);
+      document.getElementById('repDueVal').textContent = formatMoney(due);
+      document.getElementById('repAmount').value = due > 0 ? due.toFixed(2) : imprestFloat.toFixed(2);
+      document.getElementById('repDate').value = new Date().toISOString().slice(0, 10);
+      document.getElementById('repRef').value = 'CHQ-' + Math.floor(1000 + Math.random() * 9000);
+
+      document.getElementById('replenishModal').classList.add('active');
+    }
+
+    function closeReplenishModal() {
+      document.getElementById('replenishModal').classList.remove('active');
+    }
+
+    function saveReplenish(e) {
+      e.preventDefault();
+      const dt = document.getElementById('repDate').value;
+      const ref = document.getElementById('repRef').value.trim();
+      const amt = parseFloat(document.getElementById('repAmount').value);
+
+      if (!dt || !ref || isNaN(amt) || amt <= 0) {
+        showToast('Please fill out valid replenishment details');
+        return;
+      }
+
+      const repVoucherNo = 'REIMB-' + (transactions.filter(t => t.voucherNo.startsWith('REIMB')).length + 1);
+
+      const replenishTx = {
+        id: Date.now(),
+        date: dt,
+        voucherNo: repVoucherNo,
+        details: `Imprest Replenishment (Ref: ${ref})`,
+        type: 'received',
+        amount: amt,
+        category: ''
+      };
+
+      transactions.push(replenishTx);
+      persistTransactions();
+
+      closeReplenishModal();
+      renderTable();
+      updateDashboardCards();
+      showToast(`Replenished ${formatMoney(amt)} into cash in hand`);
+    }
+
+    /* --------------------------------------------------------------------------
+       ANALYTICS DOUGHNUT CHART (100% Offline Canvas Renderer)
+       -------------------------------------------------------------------------- */
+    function openAnalyticsModal() {
+      document.getElementById('analyticsModal').classList.add('active');
+      renderCanvasChart();
+    }
+
+    function closeAnalyticsModal() {
+      document.getElementById('analyticsModal').classList.remove('active');
+    }
+
+    function renderCanvasChart() {
+      const canvas = document.getElementById('chartCanvas');
+      const ctx = canvas.getContext('2d');
+      const width = canvas.width;
+      const height = canvas.height;
+      const centerX = width / 2;
+      const centerY = height / 2;
+      const outerRadius = width * 0.42;
+      const innerRadius = width * 0.25;
+
+      ctx.clearRect(0, 0, width, height);
+
+      // Calculate totals per category
+      const catTotals = {};
+      CATEGORIES.forEach(c => { catTotals[c.key] = 0; });
+
+      let grandTotalSpent = 0;
+      transactions.filter(t => t.type === 'paid').forEach(t => {
+        if (catTotals.hasOwnProperty(t.category)) {
+          catTotals[t.category] += t.amount;
+        } else {
+          catTotals.miscellaneous += t.amount;
+        }
+        grandTotalSpent += t.amount;
+      });
+
+      // Populate Legend
+      const legendEl = document.getElementById('chartLegendContainer');
+      legendEl.innerHTML = '';
+
+      if (grandTotalSpent === 0) {
+        ctx.fillStyle = '#cbd5e1';
+        ctx.beginPath();
+        ctx.arc(centerX, centerY, outerRadius, 0, Math.PI * 2);
+        ctx.arc(centerX, centerY, innerRadius, 0, Math.PI * 2, true);
+        ctx.fill();
+
+        ctx.fillStyle = '#64748b';
+        ctx.font = 'bold 24px Segoe UI, sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText('No Expenses', centerX, centerY);
+        return;
+      }
+
+      let currentAngle = -Math.PI / 2;
+
+      CATEGORIES.forEach(cat => {
+        const amt = catTotals[cat.key];
+        const pct = ((amt / grandTotalSpent) * 100).toFixed(1);
+        const sliceAngle = (amt / grandTotalSpent) * (Math.PI * 2);
+
+        if (amt > 0) {
+          ctx.fillStyle = cat.color;
+          ctx.beginPath();
+          ctx.arc(centerX, centerY, outerRadius, currentAngle, currentAngle + sliceAngle);
+          ctx.arc(centerX, centerY, innerRadius, currentAngle + sliceAngle, currentAngle, true);
+          ctx.closePath();
+          ctx.fill();
+
+          ctx.strokeStyle = '#ffffff';
+          ctx.lineWidth = 4;
+          ctx.stroke();
+
+          currentAngle += sliceAngle;
+        }
+
+        // Add legend row
+        const row = document.createElement('div');
+        row.style.display = 'flex';
+        row.style.alignItems = 'center';
+        row.style.justifyContent = 'space-between';
+        row.style.padding = '4px 6px';
+        row.style.borderRadius = '4px';
+        row.style.background = 'var(--color-slate-100)';
+
+        row.innerHTML = `
+          <div style="display:flex; align-items:center; gap:6px;">
+            <span style="width:10px; height:10px; border-radius:50%; background:${cat.color};"></span>
+            <strong>${cat.name}</strong>
+          </div>
+          <div>
+            <span>${formatMoney(amt)}</span>
+            <span style="color:var(--color-slate-500); font-size:11px; margin-left:4px;">(${pct}%)</span>
+          </div>
+        `;
+        legendEl.appendChild(row);
+      });
+
+      // Draw Center Text (Grand Total)
+      ctx.fillStyle = '#0f172a';
+      ctx.font = 'bold 36px Segoe UI, sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText(formatMoney(grandTotalSpent), centerX, centerY + 6);
+
+      ctx.fillStyle = '#64748b';
+      ctx.font = 'bold 16px Segoe UI, sans-serif';
+      ctx.fillText('TOTAL DISBURSED', centerX, centerY - 32);
+    }
+
+    /* --------------------------------------------------------------------------
+       PRINTABLE REQUISITION CLAIM FORM
+       -------------------------------------------------------------------------- */
+    function printRequisition() {
+      const totalDisbursed = transactions
+        .filter(t => t.type === 'paid')
+        .reduce((sum, t) => sum + t.amount, 0);
+      const totalReceived = transactions
+        .filter(t => t.type === 'received')
+        .reduce((sum, t) => sum + t.amount, 0);
+      const cashInHand = totalReceived - totalDisbursed;
+
+      document.getElementById('reqDate').textContent = new Date().toLocaleDateString();
+      document.getElementById('reqFloatVal').textContent = formatMoney(imprestFloat);
+      document.getElementById('reqCashVal').textContent = formatMoney(cashInHand);
+      document.getElementById('reqClaimVal').textContent = formatMoney(totalDisbursed);
+
+      const catTotals = {};
+      CATEGORIES.forEach(c => { catTotals[c.name] = 0; });
+
+      transactions.filter(t => t.type === 'paid').forEach(t => {
+        const found = CATEGORIES.find(c => c.key === t.category);
+        const name = found ? found.name : 'Miscellaneous';
+        catTotals[name] += t.amount;
+      });
+
+      const tbody = document.getElementById('reqBreakdownTbody');
+      tbody.innerHTML = '';
+
+      Object.entries(catTotals).forEach(([cat, val]) => {
+        const tr = document.createElement('tr');
+        tr.style.borderBottom = '1px solid #cbd5e1';
+        tr.innerHTML = `
+          <td style="padding:6px 10px; border-right:1px solid #cbd5e1;">${cat}</td>
+          <td style="padding:6px 10px; text-align:right; font-family:var(--font-mono);">${formatMoney(val)}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+
+      // Add total claim summary row
+      const trTot = document.createElement('tr');
+      trTot.style.background = '#f1f5f9';
+      trTot.style.fontWeight = 'bold';
+      trTot.innerHTML = `
+        <td style="padding:8px 10px; text-align:right; border-right:1px solid #cbd5e1;">TOTAL REIMBURSEMENT CLAIM:</td>
+        <td style="padding:8px 10px; text-align:right; font-family:var(--font-mono); font-size:1rem; color:#047857;">${formatMoney(totalDisbursed)}</td>
+      `;
+      tbody.appendChild(trTot);
+
+      document.getElementById('printRequisitionArea').style.display = 'block';
+      document.getElementById('printSingleVoucherArea').style.display = 'none';
+
+      window.print();
+
+      setTimeout(() => {
+        document.getElementById('printRequisitionArea').style.display = 'none';
+      }, 1000);
+    }
+
+    /* --------------------------------------------------------------------------
+       EXPORT CSV (EXCEL COMPATIBLE)
+       -------------------------------------------------------------------------- */
+    function exportCSV() {
+      let csv = 'Date,Voucher No,Particulars,Received (+),Paid (-),Running Balance,Receipt Attached,Stationery,Transport,Refreshment,Maintenance,Sanitation,Energy,Miscellaneous\n';
+
+      const sorted = [...transactions].sort((a, b) => new Date(a.date) - new Date(b.date));
+      let running = 0;
+
+      sorted.forEach(t => {
+        const isRec = t.type === 'received';
+        const rec = isRec ? t.amount : 0;
+        const paid = !isRec ? t.amount : 0;
+        running += (rec - paid);
+
+        const hasRec = Boolean(receipts[t.voucherNo]) ? 'YES' : 'NO';
+        const cStat = t.category === 'stationery' ? t.amount : 0;
+        const cTrans = t.category === 'transport' ? t.amount : 0;
+        const cRef = t.category === 'refreshment' ? t.amount : 0;
+        const cMaint = t.category === 'maintenance' ? t.amount : 0;
+        const cSan = t.category === 'sanitation' ? t.amount : 0;
+        const cNrg = t.category === 'energy' ? t.amount : 0;
+        const cMisc = t.category === 'miscellaneous' ? t.amount : 0;
+
+        csv += `"${t.date}","${t.voucherNo}","${t.details.replace(/"/g, '""')}",${rec},${paid},${running},"${hasRec}",${cStat},${cTrans},${cRef},${cMaint},${cSan},${cNrg},${cMisc}\n`;
+      });
+
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `Petty_Cash_Book_${new Date().toISOString().slice(0, 10)}.csv`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      showToast('Exported CSV spreadsheet');
+    }
+
+    /* --------------------------------------------------------------------------
+       BACKUP & RESTORE DATABASE (JSON INCLUDING ALL RECEIPTS)
+       -------------------------------------------------------------------------- */
+    function openBackupModal() {
+      document.getElementById('backupModal').classList.add('active');
+    }
+
+    function closeBackupModal() {
+      document.getElementById('backupModal').classList.remove('active');
+    }
+
+    function downloadBackupJson() {
+      const backupData = {
+        app: 'PettyCashManager',
+        version: '2.0',
+        exportedAt: new Date().toISOString(),
+        currencySymbol,
+        imprestFloat,
+        transactions,
+        receipts
+      };
+
+      const blob = new Blob([JSON.stringify(backupData, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `PettyCash_Backup_${new Date().toISOString().slice(0, 10)}.json`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      showToast('Complete backup downloaded');
+    }
+
+    function restoreBackupJson(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = async function(evt) {
+        try {
+          const data = JSON.parse(evt.target.result);
+          if (data.transactions && Array.isArray(data.transactions)) {
+            transactions = data.transactions;
+            receipts = data.receipts || {};
+            if (data.imprestFloat) imprestFloat = data.imprestFloat;
+            if (data.currencySymbol) currencySymbol = data.currencySymbol;
+
+            await persistTransactions();
+            for (const vId in receipts) {
+              await persistReceipt(vId, receipts[vId]);
+            }
+            await persistSettings();
+
+            document.getElementById('currencySelect').value = currencySymbol;
+            document.querySelectorAll('.curSymbol').forEach(el => el.textContent = currencySymbol);
+
+            renderTable();
+            updateDashboardCards();
+            closeBackupModal();
+            showToast('Backup restored successfully!');
+          } else {
+            showToast('Invalid backup file format');
+          }
+        } catch (err) {
+          console.error(err);
+          showToast('Failed to parse backup file');
+        }
+      };
+      reader.readAsText(file);
+    }
+
+    function resetToSampleData() {
+      if (confirm('Reset ledger and receipts to default sample data?')) {
+        initSeedData();
+        renderTable();
+        updateDashboardCards();
+        closeBackupModal();
+        showToast('Reset to sample data completed');
+      }
+    }
+
+    /* --------------------------------------------------------------------------
+       HELPERS: TOAST NOTIFICATION
+       -------------------------------------------------------------------------- */
+    function showToast(msg) {
+      const toast = document.getElementById('toast');
+      document.getElementById('toastMsg').textContent = msg;
+      toast.classList.add('show');
+      setTimeout(() => {
+        toast.classList.remove('show');
+      }, 2500);
+    }
+  </script>
+</body>
+</html>
